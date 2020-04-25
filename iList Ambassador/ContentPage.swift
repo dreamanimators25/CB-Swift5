@@ -25,6 +25,8 @@ open class ContentPage {
     var components: [ContentPageComponent]
     //var backgrounds: [Backgrounds]?
     
+    var frameUrl : String?  //Sameer 25/4/2020
+    
     var order: Int = 0
     var content: Int = 0
     
@@ -56,6 +58,11 @@ open class ContentPage {
         if let id = dictionary[kAPIKeyId] as? Int {
             self.id = id
         }
+        
+        if let frameURL = dictionary["frame_url"] as? String {
+            self.frameUrl = frameURL
+        }
+        
         if let shareable = dictionary["is_shareable"] as? Bool {
             self.is_shareable = shareable
         }

@@ -134,11 +134,12 @@ class BrandCollectionViewCell: UICollectionViewCell {
     
     func updateWithBrand(_ brand: Brand) {
         setUpButton()
+        
         if let url = URL(string: brand.logotypeUrl) {
             logotypeImageView.setImageFromUrl(url)
             logotypeImageView.backgroundColor = Color.backgroundColorFadedDark()
         } else {
-            logotypeImageView.image = UIImage(named: "defaultbrand")
+            //logotypeImageView.image = UIImage(named: "defaultbrand")
             logotypeImageView.backgroundColor = Color.backgroundColorFadedDark()
         }
     }

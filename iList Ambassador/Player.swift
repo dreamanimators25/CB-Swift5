@@ -11,6 +11,9 @@ import AVFoundation
 protocol PlayerDelegate {
     func playbackLikelyToKeepUp()
 }
+
+var blockPlayBack : (() -> (Void))?
+
 class Player: AVPlayer {
     var delegate: PlayerDelegate?
     
@@ -70,6 +73,11 @@ class Player: AVPlayer {
     
     func testKeepUp() {
         if let currentItem = currentItem, currentItem.isPlaybackLikelyToKeepUp && currentItem.status == .readyToPlay {
+            
+            //if let block = blockPlayBack {
+                //block()
+            //}
+            
             delegate?.playbackLikelyToKeepUp()
         }
     }

@@ -14,6 +14,7 @@ import AVFoundation
 import AVKit
 
 class ContentEmbed: UIView, ContentView {
+    
     var view: UIView { return self }
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
@@ -69,7 +70,6 @@ class ContentEmbedVimeo: UIView, ContentView {
     var height: CGFloat = 0.0
     var width: CGFloat = 0.0
     var cent: CGPoint!
-    
     
     var vimeoUrl : String?
     

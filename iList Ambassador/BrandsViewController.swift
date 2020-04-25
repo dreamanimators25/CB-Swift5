@@ -232,7 +232,7 @@ final class BrandsViewController: UIViewController, BrandAddedProtocol {
                     self.chinaBasinImageView.af_setImage(withURL: url)
                     self.chinaBasinImageView.backgroundColor = Color.backgroundColorFadedDark()
                 } else {
-                    self.chinaBasinImageView.image = UIImage(named: "defaultbrand")
+                    //self.chinaBasinImageView.image = UIImage(named: "defaultbrand")
                     self.chinaBasinImageView.backgroundColor = Color.backgroundColorFadedDark()
                 }
             } else if let error = error {
@@ -309,11 +309,12 @@ extension BrandsViewController: UICollectionViewDelegate, UICollectionViewDataSo
             imageView.layer.cornerRadius = CGFloat(cellSize / 2)
             imageView.layer.borderWidth = 2
             imageView.layer.borderColor = Color.newGray.cgColor
+            
             if let url = URL(string: item.brand.logotypeUrl) {
                 imageView.af_setImage(withURL: url)
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
             } else {
-                imageView.image = UIImage(named: "defaultbrand")
+                //imageView.image = UIImage(named: "defaultbrand")
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
             }
         }

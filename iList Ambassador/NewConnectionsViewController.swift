@@ -752,7 +752,7 @@ extension NewConnectionsViewController: UICollectionViewDelegate, UICollectionVi
                 imageView.af_setImage(withURL: url)
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
             } else {
-                imageView.image = UIImage(named: "defaultbrand")
+                //imageView.image = UIImage(named: "defaultbrand")
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
             }
         }

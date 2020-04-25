@@ -53,9 +53,9 @@ class SinglePage: UICollectionViewCell {
         didSet {
             print("Updated background")
             BGDelegate?.setShareImage(backgroundImageView!)
-            
         }
     }
+    
     var backgroundVideoView: ContentVideo?
     
     // MARK: - Component Views
@@ -69,11 +69,10 @@ class SinglePage: UICollectionViewCell {
     var contentId: Int?
     var contentTitle: String?
     var BGDelegate: backgroundDelegate?
+    
     var background: ContentPageBackground? {
         didSet {
-            
             backgroundUpdated(background)
-            
         }
     }
     
@@ -204,6 +203,17 @@ extension SinglePage {
         //createButton(consumeAction)
         layoutComponentViews()
     }
+    
+    func createSticker(_ URL : ContentPage) {
+        if let file = URL.frameUrl {
+            let imageView = ContentImage(frame: CGRect.zero)
+            imageView.setImageFromStringAndMargin(file, horizontalMarginPercent: 15)
+            imageView.delegate = self
+            imageView.marginEdgePercentage = 0
+            imageView.bottomMarginPercent = 10
+            componentViews.append(imageView)
+        }
+    }
 
     
     func createImage(_ component: ContentPageComponent) {
@@ -237,6 +247,7 @@ extension SinglePage {
         if let meta = component.meta {
             //let label = ContentText(meta: meta, bottomMarginPercent: component.marginBottomPercent, horizontalMarginPercent: component.marginHorizontalPercent)
             //label.marginEdgePercentage = component.marginEdgePercentage
+            //componentViews.append(label)
             //old code from client
             
             
@@ -255,15 +266,15 @@ extension SinglePage {
                     margin = 10.0
                     //return .iPhone6Plus
                 case 2436:
-                    margin = 20.0
+                    margin = 15.0
                     //return .iPhoneX
                 default:
-                    margin = 20.0
+                    margin = 15.0
                     //return .Unknown
                 }
                 
                 
-                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 10)
+                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
                 label.marginEdgePercentage = 0
                 
                 componentViews.append(label)
@@ -274,25 +285,26 @@ extension SinglePage {
                 //case 960:
                     //return .iPhone4
                 case 1136:
-                    margin = 30.0
+                    margin = 25.0
                     //return .iPhone5
                 case 1334:
-                    margin = 40.0
+                    margin = 35.0
                     //return .iPhone6
                 case 2208, 1920:
-                    margin = 50.0
+                    margin = 45.0
                     //return .iPhone6Plus
                 case 2436:
-                    margin = 60.0
+                    margin = 55.0
                     //return .iPhoneX
                 default:
-                    margin = 60.0
+                    margin = 55.0
                     //return .Unknown
                 }
                 
                 
-                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 0)
+                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
                 label.marginEdgePercentage = 0
+                
                 
                 componentViews.append(label)
             }
@@ -410,6 +422,7 @@ extension SinglePage {
             }
             veritcalVisualString += "[\(viewString)]-\(metricsName)"
         }
+        
         if componentViews.count > 0 {
             veritcalVisualString += "-|"
             let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: veritcalVisualString, options: [], metrics: verticalMetrics, views: views)
@@ -571,6 +584,7 @@ extension SinglePage {
             pageBackgroundView.transform = pageBackgroundView.transform.scaledBy(x: scale, y: scale)
         }
     }
+    
 }
 
 extension SinglePage: ContentImageDelegate {

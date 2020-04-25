@@ -46,6 +46,10 @@ class ContentVideo: UIView, ContentView {
         height = frame.size.height
         width = frame.size.width
         clipsToBounds = true
+        
+        blockPlayBack = { 
+            //self.playbackLikelyToKeepUp()
+        }
     }
     
     func prepareForReuse() {
@@ -204,6 +208,7 @@ class ContentVideo: UIView, ContentView {
     func showThumb() {
         videoThumbView?.alpha = 1
     }
+    
 }
 
 extension ContentVideo: PlayerDelegate {
@@ -223,3 +228,4 @@ extension ContentVideo: PlayerDelegate {
         }
     }
 }
+

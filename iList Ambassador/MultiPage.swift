@@ -36,7 +36,6 @@ import Alamofire
 import MessageUI
 import AlamofireImage
 
-
 class MultiPage: UICollectionViewCell, backgroundDelegate {
     
     var arrContentID = [String]()
@@ -50,6 +49,8 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     var link1 = String()
     var link2 = String()
     var link3 = String()
+    
+    var stickerImageView = UIImageView()
     
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var linkView: UIView!
@@ -424,7 +425,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
 
     }
     
-     /*
+    /*
     func retrieveImage(_ url: String) {
         Alamofire.request(url).downloadProgress(closure: { (Progress) in
             print(Progress.fractionCompleted)
@@ -438,7 +439,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             }
         }
     }
- */
+    */
     
     // MARK: BackgroundDelegate
     
@@ -447,8 +448,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
        // shareImageView.image = UIImage.init(named: "defaultneutralgender")
     }
     
-    
-
     
     // MARK: - Actions
  
@@ -476,6 +475,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     @IBAction func goThereAction(_ sender: Any) {
         self.tap()
     }
+    
     @IBAction func instagramShareButtonPressed(_ sender: UIButton) {
 //        guard let image = shareImageView else { return }
 //        delegate?.shareInstagram(image)
@@ -500,9 +500,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             delegate?.shareTwitter(image, isBack: true, page: currentPage)
         }
     }
-    
-    
-    
+        
     
     @IBAction func useButtonPressed(_ sender: UIButton) {
         
@@ -526,7 +524,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
         } else if consumeType == .document {
             title = "Open PDF Document"
         }
-        
         
         
         delegate?.presentUseAlert(title, message)
@@ -620,12 +617,54 @@ extension MultiPage: UICollectionViewDataSource {
             self.contentView.superview?.willRemoveSubview(base3)
     }
     
+    func setImageFromString(_ urlString: String) {
+        if let url = URL(string: urlString) {
+            
+            self.stickerImageView.frame = CGRect.init(x: self.contentView.frame.size.width/3, y: self.contentView.frame.size.height - SCREENSIZE.width/3, width: SCREENSIZE.width/3, height: SCREENSIZE.width/3)
+            
+            stickerImageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, progress: nil, imageTransition: UIImageView.ImageTransition.crossDissolve(0.5), runImageTransitionIfCached: true, completion: { (response: DataResponse<UIImage>) in
+                
+                if response.result.value != nil {
+                    //let screenWidht = SCREENSIZE.width/2
+                    //let width = screenWidht
+                    //let height = screenWidht
+                    //self.stickerImageView.frame.size.width = width
+                    //self.stickerImageView.frame.size.height = height
+                    self.stickerImageView.contentMode = .scaleAspectFill
+                    
+                    //self.delegate?.imageLoaded(image: image)
+                    
+                    self.contentView.superview?.addSubview(self.stickerImageView)
+                    /*
+                    self.stickerImageView.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    let horizontalConstraint = NSLayoutConstraint(item: self.stickerImageView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.contentView.superview, attribute:NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+                    let verticalConstraint = NSLayoutConstraint(item: self.stickerImageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.contentView.superview, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: -10)
+
+                    NSLayoutConstraint.activate([horizontalConstraint,verticalConstraint])
+
+                    self.contentView.superview?.layoutIfNeeded()
+                    */
+                }
+                
+            })
+        }
+    }
     
     func handlePageButtons(_ page: Int) {
         
         if currentPage != page {
             let cell = multiPageCollectionView.dequeueReusableCell(withReuseIdentifier: "PageCell", for: IndexPath(row: currentPage, section: 0)) as! SinglePage
             cell.pauseMedia()
+        }
+        
+        if let URL = content?.pages[page].frameUrl {
+            //let cell = multiPageCollectionView.dequeueReusableCell(withReuseIdentifier: "PageCell", for: IndexPath(row: currentPage, section: 0)) as! SinglePage
+            //cell.createSticker(content?.pages[page] ?? ContentPage(dictionary: [:]))
+            self.setImageFromString(URL)
+        }else {
+            self.stickerImageView.removeFromSuperview()
+            self.contentView.superview?.willRemoveSubview(stickerImageView)
         }
 
         
@@ -918,7 +957,6 @@ extension MultiPage: UICollectionViewDataSource {
         btn2.tag = 2
         btn2.addTarget(self, action: #selector(MultiPage.btnClickedMultiLink(_:)), for: .touchUpInside)
         btn2.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
-        
         
         
         //base3 = UIView.init(frame: CGRect.init(x: 20, y: base2.frame.origin.y + base2.frame.size.height + 15, width: (self.contentView.frame.width - 40), height: (self.contentView.frame.width/4)))

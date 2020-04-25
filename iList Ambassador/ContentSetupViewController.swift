@@ -596,7 +596,7 @@ class ContentSetupViewController: UIViewController {
         if let statis = statistics {
             statis.addPageDuration(ContentSetupViewController.currentContent, page: ContentSetupViewController.currentPage, seconds: secondsOnPage)
             StatisticsManager.sharedInstance.sendAmbassadorStatistics(statis, completion: { success, error in
-                debugPrint("Error: \(String(describing: error))")
+                 debugPrint("Error: \(String(describing: error))")
             })
         }
     }

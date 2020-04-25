@@ -55,7 +55,6 @@ class ContentImage: UIImageView, ContentView {
             //return .Unknown
         }
         
-        
         setup()
     }
     

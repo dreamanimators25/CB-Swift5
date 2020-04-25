@@ -33,12 +33,20 @@ class ContentText: UITextView, ContentView {
         self.init(frame: CGRect.zero, textContainer: nil)
         self.horizontalMarginPercent = horizontalMarginPercent
         self.bottomMarginPercent = bottomMarginPercent
+        
         self.text = meta.text
         self.font = meta.font
         self.color = meta.color
         self.textAlignment = meta.textAlignment
         
         //self.backColor = meta.bgColor
+        
+        if self.text == "" {
+            self.backColor = UIColor.clear
+        }else {
+            self.backColor = meta.bgColor
+        }
+        
         setup()
     }
 
@@ -54,6 +62,8 @@ class ContentText: UITextView, ContentView {
         self.dataDetectorTypes = .link
         self.linkTextAttributes = [NSAttributedString.Key.foregroundColor : Color.lightBlueColor()] as [NSAttributedString.Key : Any]
         self.backgroundColor = self.backColor
+        self.layer.cornerRadius = 10.0 // Sameer 24/4/2020
+        
         let screenWidht = SCREENSIZE.width - 20
         let width = screenWidht-((self.horizontalMarginPercent/100 * 2) * screenWidht)
         if let font = self.font {

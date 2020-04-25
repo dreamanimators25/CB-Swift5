@@ -15,11 +15,12 @@ import Firebase
 import FirebaseMessaging
 import UserNotifications
 
-let newBaseURL = "http://104.42.144.12:5000/api/"
+//let newBaseURL = "http://104.42.144.12:5000/api/" //Sameer 23/4/2020
+let newBaseURL = "http://40.112.131.121:5000/api/"
 let apdel = UIApplication.shared.delegate
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     var window: UIWindow?
 

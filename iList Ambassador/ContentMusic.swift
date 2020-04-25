@@ -79,7 +79,9 @@ class ContentMusic: UIView, ContentView {
                     self.overlay.alpha = 1
                     
                     UIView.animate(withDuration: 0.3, animations: {
-                        self.button.alpha = 1
+                        //self.button.alpha = 1 //Sameer 24/4/2020
+                        
+                        self.togglePlay()
                     })
                 })
                 setupMusic()
@@ -98,9 +100,9 @@ class ContentMusic: UIView, ContentView {
         addConstraint(NSLayoutConstraint(item: timeLabel, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
 
         circularProgress = CircularProgress(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        addViewToImage(overlay)
-        addViewToImage(circularProgress!)
-        addViewToImage(button)
+        //addViewToImage(overlay) //Sameer 24/4/2020
+        //addViewToImage(circularProgress!) //Sameer 24/4/2020
+        //addViewToImage(button) //Sameer 24/4/2020
         updateTime()
         if let audioPlayer = audioPlayer, let currentItem = audioPlayer.currentItem {
             let duration = currentItem.asset.duration.seconds
@@ -137,6 +139,13 @@ class ContentMusic: UIView, ContentView {
             }
             let seekTime: CMTime = CMTimeMake(value: 0, timescale: 1)
             player.seek(to: seekTime)
+            
+            //Sameer 24/4/2020
+            audioPlayer?.pause()
+            if let timer = timer {
+                timer.invalidate()
+            }
+            isPlaying = false
         }
     }
     
@@ -160,6 +169,7 @@ class ContentMusic: UIView, ContentView {
     func startTimer() {
         timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
     }
+    
     @objc  
     func updateTime() {
         if let audioPlayer = audioPlayer, let currentItem = audioPlayer.currentItem {

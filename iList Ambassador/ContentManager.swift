@@ -74,6 +74,10 @@ open class ContentManager: BaseManager {
         })
     }
     
+    //"https://ilistambassador.s3.amazonaws.com:443/dev/savedframe/WELCOME.png"
+    //"https://ilistambassador.s3.amazonaws.com:443/dev/savedframe/sun.png"
+    //"frame_url" 
+    
     func getContentForId(_ id: Int, page: Int = 1, completion: @escaping ContentsResponseBlock) {
         let router = ContentRouter(endpoint: .getContentForAmbassadorship(id: id, page: page, pageSize: 20))
         performRequest(withRouter: router, { (response: DataResponse<Any>) in
