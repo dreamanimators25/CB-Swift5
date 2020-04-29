@@ -328,6 +328,11 @@ class ContentSetupViewController: UIViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadStatistics = {
+            self.endStats()
+        }
+        
         self.makeBarButton()
         NotificationCenter.default.post(name: Notification.Name.init("showMenu"), object: nil, userInfo: ["data" : true])
         //super.view.layoutSubviews()
@@ -448,7 +453,7 @@ class ContentSetupViewController: UIViewController {
             }
         }
 //        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
-        endStats()
+        //endStats() //Sameer 29/4/2020
         dismiss(animated: true, completion: nil)
         navigationController?.popToRootViewController(animated: true)
     }

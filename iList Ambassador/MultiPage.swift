@@ -283,12 +283,16 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     }
                 }
             case 3:
-                delegate?.showMessage("This is your code", idin)
+                DispatchQueue.main.async {
+                    self.delegate?.showMessage("This is your code", idin)
+                }
             case 5:
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
-                } else {
-                    UIApplication.shared.openURL(URL(string : idin)!)
+                DispatchQueue.main.async {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
+                    } else {
+                        UIApplication.shared.openURL(URL(string : idin)!)
+                    }
                 }
             case 4:
                 AmbassadorshipManager.sharedInstance.requestAmbassadorhipWithCode(idin) { (ambassadorship, error, code) in
@@ -313,23 +317,27 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     
                 }
             case 2:
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
-                } else {
-                    UIApplication.shared.openURL(URL(string : idin)!)
+                DispatchQueue.main.async {
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
+                    } else {
+                        UIApplication.shared.openURL(URL(string : idin)!)
+                    }
                 }
             
             case 6:
-                guard let number = URL(string: "tel://\(idin)") else { return }
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(number, options: [:], completionHandler: { (status) in })
-                } else {
-                    UIApplication.shared.openURL(number)
+                DispatchQueue.main.async {
+                    guard let number = URL(string: "tel://\(idin)") else { return }
+                    if #available(iOS 10.0, *) {
+                        UIApplication.shared.open(number, options: [:], completionHandler: { (status) in })
+                    } else {
+                        UIApplication.shared.openURL(number)
+                    }
                 }
             case 7:
-               
-                delegatePaser?.showNewLink(link: idin)
-                
+                DispatchQueue.main.async {
+                    self.delegatePaser?.showNewLink(link: idin)
+                }
 //                guard let number = URL(string: "mailto:\(idin)") else { return }
 //                if #available(iOS 10.0, *) {
 //                    UIApplication.shared.open(number, options: [:], completionHandler: { (status) in })

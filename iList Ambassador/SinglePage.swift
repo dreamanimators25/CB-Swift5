@@ -31,7 +31,7 @@ struct ImageIndex {
 }
 
 var loadVimeoPlayer : ((_ url:String)-> (Void))?
-
+var loadStatistics : (() -> (Void))?
 
 class SinglePage: UICollectionViewCell {
     
@@ -127,6 +127,7 @@ class SinglePage: UICollectionViewCell {
         loadVimeoPlayer = { vimURL in
             self.delegate?.showVimeoPlayer(vimURL)
         }
+        
     }
     
     func configure(with content: Content, consumeAction: ConsumeAction?, shareable: Bool, pageIndex: Int) {
@@ -202,7 +203,13 @@ extension SinglePage {
         }
         //createButton(consumeAction)
         layoutComponentViews()
+        
+        if let statistic = loadStatistics {
+            statistic()
+        }
     }
+    
+    
     
     func createSticker(_ URL : ContentPage) {
         if let file = URL.frameUrl {
