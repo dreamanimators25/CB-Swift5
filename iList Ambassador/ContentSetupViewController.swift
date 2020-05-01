@@ -174,7 +174,8 @@ class ContentSetupViewController: UIViewController {
         
         
         let rightbutton = UIButton.init(type: .custom)
-        rightbutton.setImage(UIImage(named: "logo_small")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        //rightbutton.setImage(UIImage(named: "logo_small")?.withRenderingMode(.alwaysOriginal), for: .normal) //Sameer 1/5/2020
+        rightbutton.setImage(UIImage(named: "home")?.withRenderingMode(.alwaysOriginal), for: .normal)
         rightbutton.addTarget(self, action: #selector(rightBarTapped(_:)), for: .touchUpInside)
         //rightbutton.widthAnchor.constraint(equalToConstant: 32.0).isActive = true
         //rightbutton.heightAnchor.constraint(equalToConstant: 32.0).isActive = true
@@ -196,7 +197,7 @@ class ContentSetupViewController: UIViewController {
         
         let btnView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: 76, height: 32))
         btnView.addSubview(rightbutton)
-        btnView.addSubview(rightbutton1)
+        //btnView.addSubview(rightbutton1) //Sameer 1/5/2020
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: btnView)
         
