@@ -37,16 +37,19 @@ class ContentSetupViewController: UIViewController {
             }
         }
     }
+    
     var contentId: Int?
     
     @IBAction func closeButtonPressed(_ sender: BrandButton) {
         closeBrand()
     }
+    
     @IBOutlet weak var closeButton: BrandButton! {
         willSet {
             newValue.setImage(UIImage(named: "close11"), for: .normal)
         }
     }
+    
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
     var contentArray = [Content]()
@@ -65,16 +68,17 @@ class ContentSetupViewController: UIViewController {
             }
         }
     }
+    
     var useContent = 0
     var content: Content? {
         didSet {
             
         }
     }
+    
     lazy var outboundShareManager: OutboundShareManager = {
         return OutboundShareManager(presentingViewController: self)
     }()
-    
         
     // MARK: - Views
     @IBOutlet weak var contentCollectionView: UICollectionView!
@@ -87,13 +91,11 @@ class ContentSetupViewController: UIViewController {
     @IBOutlet weak var twitterShareButton: UIButton!
     @IBOutlet weak var testImageView: UIImageView!
     
-    
     // MARK: - Varibles
 
     var backgroundForSharing = UIImageView() {
         didSet {
             print("Backgroundimageforsharing has been set")
-            
         }
     }
     
@@ -141,7 +143,6 @@ class ContentSetupViewController: UIViewController {
     
     static func updateMulti() {
         isMulti = true
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -151,6 +152,7 @@ class ContentSetupViewController: UIViewController {
 //        }
         
         //exitBrandButton.backgroundColor = .red
+    
         
         loadCollectionView = { ind in
             //self.contentCollectionView.reloadItems(at: [ind])
@@ -287,7 +289,6 @@ class ContentSetupViewController: UIViewController {
         self.present(post!, animated: true, completion: nil)
     }
     
-    
     func shareTwitter(_ imageView: UIImageView, isBack: Bool, page: Int) {
         var image = imageView.image
         if let multiCell = contentCollectionView.visibleCells.first as? MultiPage,
@@ -320,15 +321,17 @@ class ContentSetupViewController: UIViewController {
         activityVC.excludedActivityTypes = [
             UIActivity.ActivityType.airDrop, UIActivity.ActivityType.mail, UIActivity.ActivityType.message,
             UIActivity.ActivityType.openInIBooks, UIActivity.ActivityType.postToFacebook, UIActivity.ActivityType.postToFlickr,
-                                            UIActivity.ActivityType.postToTencentWeibo, UIActivity.ActivityType.postToTwitter, UIActivity.ActivityType.postToVimeo,
-                                            UIActivity.ActivityType.postToWeibo, UIActivity.ActivityType.print, UIActivity.ActivityType.saveToCameraRoll
-                                            ]
+            UIActivity.ActivityType.postToTencentWeibo, UIActivity.ActivityType.postToTwitter, UIActivity.ActivityType.postToVimeo,
+            UIActivity.ActivityType.postToWeibo, UIActivity.ActivityType.print, UIActivity.ActivityType.saveToCameraRoll
+        ]
         self.present(activityVC, animated: true, completion: nil)
     }
     
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.brandButton.isHidden = true
         
         loadStatistics = {
             self.endStats()
@@ -346,12 +349,10 @@ class ContentSetupViewController: UIViewController {
         
         if #available(iOS 11.0, *) {
             contentCollectionView?.contentInsetAdjustmentBehavior = .never
-            
         }
         
-        
         exitBrandButton.imageView?.contentMode = .scaleAspectFit
-//
+
 //        NotificationCenter.default.addObserver(self,
 //                                               selector: #selector(closeBrand),
 //                                               name: NSNotification.Name.UIApplicationDidEnterBackground,
@@ -467,7 +468,6 @@ class ContentSetupViewController: UIViewController {
         scrollContent(1)
     }
     
-    
     func scrollContent(_ direction: Int) {
         contentCollectionView.scrollHorizontal(ContentSetupViewController.currentContent + direction, animated: true)
     }
@@ -489,11 +489,11 @@ class ContentSetupViewController: UIViewController {
     
     func setBrandImg(_ imgString: String) {
         Alamofire.request(imgString).responseImage { response in
-                if let image = response.result.value {
-                    if let button = self.brandButton {
-                        button.setImage(image, for: .normal)
-                    }
+            if let image = response.result.value {
+                if let button = self.brandButton {
+                    button.setImage(image, for: .normal)
                 }
+            }
         }
     }
 
@@ -516,7 +516,7 @@ class ContentSetupViewController: UIViewController {
                     self.handleContentButtons()
                     self.contentCollectionView.reloadData()
                     
-                    self.shareButtons(self.self.contentCollectionView.currentHorizontalPage(), 0)
+                    self.shareButtons(self.contentCollectionView.currentHorizontalPage(), 0)
                 })
             } else if let error = error {
                 Crashlytics.sharedInstance().recordError(error)
@@ -638,6 +638,7 @@ extension ContentSetupViewController: UICollectionViewDataSource, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MultiPageCell", for: indexPath) as! MultiPage
         print("index path = \(indexPath)")
+        
         if useContent == 0 {
             if let contents = contents {
                 let content = contents[indexPath.row]
@@ -661,11 +662,51 @@ extension ContentSetupViewController: UICollectionViewDataSource, UICollectionVi
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    /*
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print(indexPath.row)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MultiPageCell", for: indexPath) as! MultiPage
         
+        if useContent == 0 {
+            if let contents = contents {
+                let content = contents[indexPath.row]
+                
+                cell.collection = contentCollectionView
+                cell.content = content
+                cell.delegatePaser = self
+                cell.delegate = self
+                
+                for i in cell.content?.pages ?? [ContentPage]() {
+                    for j in i.components {
+                        if j.type == .Sound {
+                            if let Auto = autoPlay {
+                                Auto()
+                            }
+                        }
+                    }
+                }
+                 
+            }
+        } else if useContent == 1 {
+            if let content = content {
+                let content = content
+                cell.collection = contentCollectionView
+                cell.shareButton.imageView?.contentMode = .scaleAspectFit
+                cell.content = content
+                cell.delegatePaser = self
+                cell.delegate = self
+            }
+        }
+        
+    }*/
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+                
         if let cell = cell as? MultiPage {
             cell.reset()
         }
+        
+        print(indexPath.row)
     }
     
 }
@@ -681,7 +722,6 @@ extension ContentSetupViewController: MultiPageDelegate {
         
         self.navigationController?.pushViewController(contentViewController, animated: true)
     }
-    
     
     func showGift(_ title: String, mess: String?, res: @escaping (Bool) -> ()) {
         let alertController = UIAlertController(title: title, message: mess, preferredStyle: UIAlertController.Style.actionSheet)
@@ -710,12 +750,11 @@ extension ContentSetupViewController: MultiPageDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-    
     func currentSubPage(_ page: Int) {
         currentSubPage = page
         print("curr sub page = \(currentSubPage)")
-        
     }
+
     func currentPage(_ page: Int) {
         addDuration()
         print("curr page = \(ContentSetupViewController.currentPage)")
@@ -727,14 +766,12 @@ extension ContentSetupViewController: MultiPageDelegate {
     }
     
     func shareContentOutbound(_ id: Int) {
-        
         showShareOutbound(id)
     }
     
     func vertical(_ verticalPage: Int) {
         
     }
-    
     
     func retrieveImage(_ url: String) {
         Alamofire.request(url).downloadProgress(closure: { (Progress) in
@@ -745,7 +782,6 @@ extension ContentSetupViewController: MultiPageDelegate {
             
             if let image = response.result.value {
                 self.testImageView.image = UIImage(data: image)
-                
             }
         }
     }
@@ -759,8 +795,8 @@ extension ContentSetupViewController: MultiPageDelegate {
 }
 
 extension ContentSetupViewController : UIScrollViewDelegate {
-    // MARK: - UIScrollViewDelegate
     
+    // MARK: - UIScrollViewDelegate
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         var scrollOffset = scrollView.contentOffset.x
@@ -782,6 +818,7 @@ extension ContentSetupViewController : UIScrollViewDelegate {
             }
         }
     }
+    
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         calculateCurrentContentNumber()
     }
@@ -790,12 +827,11 @@ extension ContentSetupViewController : UIScrollViewDelegate {
         calculateCurrentContentNumber()
     }
     
-
     func calculateCurrentContentNumber() {
-        
         addDuration()
         handleContentButtons()
     }
+    
     func handleContentButtons() {
         guard let scroll = contentCollectionView else { return }
         
@@ -823,6 +859,7 @@ extension ContentSetupViewController: MFMailComposeViewControllerDelegate {
 extension ContentSetupViewController: SinglePageDelegate {
     
     func imageLoaded(image: UIImage) {
+        
     }
     
     func showNewLink(link: String) {
@@ -900,7 +937,6 @@ extension ContentSetupViewController: SinglePageDelegate {
     }
     
     func showLink(_ link: String, contentId: Int) {
-        
         addClickCount()
         let webViewController = WebViewController(link: link, contentId: contentId)
         present(webViewController, animated: true, completion: nil)

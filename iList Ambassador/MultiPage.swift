@@ -58,17 +58,18 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     
     @IBOutlet weak var goThereBtn: UIButton!
     @IBOutlet weak var downButton: BounchingButton!
-    @IBOutlet weak var shareButton: BrandButton!
+    @IBOutlet weak var upButton: UIButton!
     @IBOutlet weak var outboundShareButton: BrandButton!
     
-    @IBOutlet weak var upButton: UIButton!
+    
+    @IBOutlet weak var shareButton: BrandButton!
     @IBOutlet weak var useButton: UIButton!
     @IBOutlet weak var facebookShareButton: UIButton!
     @IBOutlet weak var twitterShareButton: UIButton!
     @IBOutlet weak var shareImageView: UIImageView!
     
     @IBOutlet weak var multiPageCollectionView: UICollectionView!
-    
+    @IBOutlet weak var leftConstraint: NSLayoutConstraint!
     
     var collection: UICollectionView?
     var current: Int?
@@ -79,15 +80,14 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     var delegate: MultiPageDelegate?
     var delegatePaser: SinglePageDelegate?
     static var currPage = 0
-    
-    @IBOutlet weak var leftConstraint: NSLayoutConstraint!
-    
     var shareableBody: Bool = false
+    
     var currentPage: Int = 0 {
         didSet {
             delegate?.currentPage(currentPage)
         }
     }
+    
     var currentSubPage: Int = 0 {
         didSet {
             delegate?.currentSubPage(currentSubPage)
@@ -105,29 +105,46 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             let gesture = UITapGestureRecognizer.init(target: self, action: #selector(tap))
             self.linkView.addGestureRecognizer(gesture)
             
+            //Sameer 6/5/2020 //
+            self.shareButton.isHidden = true
+            self.useButton.isHidden = true
+            self.facebookShareButton.isHidden = true
+            self.twitterShareButton.isHidden = true
+            //Sameer 6/5/2020 //
+            
             if (content != nil) {
 
                 currentPage = 0;
                 var actionImage: UIImage? = nil
                 
+                //Sameer 6/5/2020 Commented For hide button's image
+                
                 switch content?.pages[currentPage].consumeAction {
                 case 1:
-                    actionImage = UIImage(named: "use3")
+                    print("1")
+                    //actionImage = UIImage(named: "use3") //Sameer 6/5/2020
                 case 2:
-                    actionImage = UIImage(named: "link")
+                    print("2")
+                    //actionImage = UIImage(named: "link") //Sameer 6/5/2020
                 case 3:
+                    print("3")
                     self.goThereBtn.setTitle("Go There", for: .normal)
-                    actionImage = UIImage(named: "code")
+                    //actionImage = UIImage(named: "code") //Sameer 6/5/2020
                 case 4:
-                    actionImage = UIImage(named: "connect")
+                    print("4")
+                    //actionImage = UIImage(named: "connect") //Sameer 6/5/2020
                 case 5:
-                    actionImage = UIImage(named: "read")
+                    print("5")
+                    //actionImage = UIImage(named: "read") //Sameer 6/5/2020
                 case 6:
-                    actionImage = UIImage(named: "phone")
+                    print("6")
+                    //actionImage = UIImage(named: "phone") //Sameer 6/5/2020
                 case 7:
+                    print("7")
                     self.goThereBtn.setTitle("Email", for: .normal)
-                    actionImage = UIImage(named: "mail")
+                    //actionImage = UIImage(named: "mail") //Sameer 6/5/2020
                 case 8:
+                    print("8")
                     self.goThereBtn.setTitle("View Excel", for: .normal)
                     //actionImage = UIImage(named: "read")
                 case 9:
@@ -135,7 +152,9 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                 case 10:
                     print("10")
                 default: break
+                
                 }
+         
                 
                 linkImageView.image = actionImage
                 
@@ -155,7 +174,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                 }
                 
                 let shareable = content?.shareable
-            
                 
                 
                 print("share = \(shareable ?? false), \(shareableBody)")
@@ -183,7 +201,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     facebookShareButton.isHidden = true
                    // instagramShareButton.isHidden = true
                     twitterShareButton.isHidden = true
-                    useButton.isHidden = false
+                    useButton.isHidden = true //false
                     //shareButton.isHidden = false //s.
                 } else if !shareable! && is_shareable {
                     //facebookShareButton.isHidden = false //s.
@@ -212,7 +230,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                 if multiPageCollectionView.dataSource == nil {
                     multiPageCollectionView.delegate = self
                     multiPageCollectionView.dataSource = self
-                    
                 }
                 
                 multiPageCollectionView.reloadData()
@@ -224,7 +241,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     func presentUseAlert(_ title: String, _ message: String) {
         
     }
-    
     
     func shareButtons(_ contentNumber: Int?, _ subPageNumber: Int?) {}
     
@@ -245,9 +261,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
-        
+                
     }
     
     @objc func tap() {
@@ -409,7 +423,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             facebookShareButton.isHidden = true
             //instagramShareButton.isHidden = true
             twitterShareButton.isHidden = true
-            useButton.isHidden = false
+            useButton.isHidden = true //false
             //shareButton.isHidden = false //s.
         } else if !shareable! && is_shareable {
             //facebookShareButton.isHidden = false //s.
@@ -455,7 +469,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
         shareImageView = imageView
        // shareImageView.image = UIImage.init(named: "defaultneutralgender")
     }
-    
     
     // MARK: - Actions
  
@@ -581,7 +594,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
 
 extension MultiPage: UICollectionViewDataSource {
     
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let content = content {
             return content.pages.count
@@ -614,6 +626,10 @@ extension MultiPage: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            self.stickerImageView.image = nil
+            self.stickerImageView.removeFromSuperview()
+            self.contentView.superview?.willRemoveSubview(stickerImageView)
+        
             self.multiLinkBaseView.removeFromSuperview()
             self.contentView.superview?.willRemoveSubview(multiLinkBaseView)
             
@@ -666,14 +682,17 @@ extension MultiPage: UICollectionViewDataSource {
             cell.pauseMedia()
         }
         
-        if let URL = content?.pages[page].frameUrl {
-            //let cell = multiPageCollectionView.dequeueReusableCell(withReuseIdentifier: "PageCell", for: IndexPath(row: currentPage, section: 0)) as! SinglePage
-            //cell.createSticker(content?.pages[page] ?? ContentPage(dictionary: [:]))
-            self.setImageFromString(URL)
-        }else {
-            self.stickerImageView.removeFromSuperview()
-            self.contentView.superview?.willRemoveSubview(stickerImageView)
-        }
+        //Sameer 5/5/2020
+//        if let URL = content?.pages[page].frameUrl {
+//            //let cell = multiPageCollectionView.dequeueReusableCell(withReuseIdentifier: "PageCell", for: IndexPath(row: currentPage, section: 0)) as! SinglePage
+//            //cell.createSticker(content?.pages[page] ?? ContentPage(dictionary: [:]))
+//            self.stickerImageView.image = nil
+//            self.setImageFromString(URL)
+//        }else {
+//            self.stickerImageView.image = nil
+//            self.stickerImageView.removeFromSuperview()
+//            self.contentView.superview?.willRemoveSubview(stickerImageView)
+//        }
 
         
         let isIdentity = content?.pages[page].identity
@@ -707,6 +726,8 @@ extension MultiPage: UICollectionViewDataSource {
             label.text = ""
             var actionImage: UIImage? = nil
             
+            
+            
             self.baseView.removeFromSuperview()
             self.contentView.superview?.willRemoveSubview(baseView)
             
@@ -723,10 +744,12 @@ extension MultiPage: UICollectionViewDataSource {
             
             switch action {
             case 1:
-                actionImage = UIImage(named: "use3")
+                print("1")
+                //actionImage = UIImage(named: "use3") //Sameer 6/5/2020
                 
             case 2:
-                actionImage = UIImage(named: "link")
+                print("2")
+                //actionImage = UIImage(named: "link") //Sameer 6/5/2020
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
@@ -735,10 +758,13 @@ extension MultiPage: UICollectionViewDataSource {
                 }
                
             case 3:
-                actionImage = UIImage(named: "code")
+                print("3")
+                //actionImage = UIImage(named: "code") //Sameer 6/5/2020
             case 4:
-                actionImage = UIImage(named: "connect")
+                print("4")
+                //actionImage = UIImage(named: "connect") //Sameer 6/5/2020
             case 5:
+                print("5")
                 //actionImage = UIImage(named: "read")
                 
                 OperationQueue.main.addOperation {
@@ -748,9 +774,11 @@ extension MultiPage: UICollectionViewDataSource {
                 }
                 
             case 6:
-                actionImage = UIImage(named: "phone")
+                print("6")
+                //actionImage = UIImage(named: "phone") //Sameer 6/5/2020
             case 7:
-                actionImage = UIImage(named: "mail")
+                print("7")
+                //actionImage = UIImage(named: "mail") //Sameer 6/5/2020
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
@@ -759,6 +787,7 @@ extension MultiPage: UICollectionViewDataSource {
                 }
                 
             case 8:
+                print("8")
                 //actionImage = UIImage(named: "read")
                 
                 OperationQueue.main.addOperation {
@@ -768,6 +797,7 @@ extension MultiPage: UICollectionViewDataSource {
                 }
                 
             case 9:
+                print("9")
                 //actionImage = UIImage(named: "multiLink")
                
                 OperationQueue.main.addOperation {
@@ -775,6 +805,7 @@ extension MultiPage: UICollectionViewDataSource {
                 }
                 
             case 10:
+                print("10")
                 //actionImage = UIImage(named: "inAppLink")
                 
                 OperationQueue.main.addOperation {
@@ -920,7 +951,6 @@ extension MultiPage: UICollectionViewDataSource {
         btn1.tag = 1
         btn1.addTarget(self, action: #selector(MultiPage.btnClickedMultiLink(_:)), for: .touchUpInside)
         btn1.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0)
-        
         
         
         //base2 = UIView.init(frame: CGRect.init(x: 20, y: base1.frame.origin.y + base1.frame.size.height + 15, width: (self.contentView.frame.width - 40), height: (self.contentView.frame.width/4)))

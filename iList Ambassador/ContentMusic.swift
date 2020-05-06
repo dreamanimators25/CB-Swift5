@@ -73,15 +73,24 @@ class ContentMusic: UIView, ContentView {
         width = frame.size.width
         clipsToBounds = true
         
+        //Sameer 5/5/2020
+        //loadStatistics = {
+            //self.isPlaying = true
+            //self.audioPlayer?.play()
+            //self.button.setImage(self.pauseImg, for: UIControl.State())
+            //self.startTimer()
+            
+            //self.button.sendActions(for: .touchUpInside)
+        //}
+        
         if let thumb = thumb {
             if let url = URL(string: thumb) {
                 imageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, progress: nil, imageTransition: UIImageView.ImageTransition.crossDissolve(0.2), runImageTransitionIfCached: true, completion: { _ in
                     self.overlay.alpha = 1
                     
                     UIView.animate(withDuration: 0.3, animations: {
-                        //self.button.alpha = 1 //Sameer 24/4/2020
-                        
-                        self.togglePlay()
+                        self.button.alpha = 1 //Sameer 24/4/2020
+    
                     })
                 })
                 setupMusic()
@@ -100,9 +109,11 @@ class ContentMusic: UIView, ContentView {
         addConstraint(NSLayoutConstraint(item: timeLabel, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0))
 
         circularProgress = CircularProgress(frame: CGRect(x: 0, y: 0, width: size, height: size))
-        //addViewToImage(overlay) //Sameer 24/4/2020
-        //addViewToImage(circularProgress!) //Sameer 24/4/2020
-        //addViewToImage(button) //Sameer 24/4/2020
+        
+        addViewToImage(overlay) //Sameer 24/4/2020
+        addViewToImage(circularProgress!) //Sameer 24/4/2020
+        addViewToImage(button) //Sameer 24/4/2020
+        
         updateTime()
         if let audioPlayer = audioPlayer, let currentItem = audioPlayer.currentItem {
             let duration = currentItem.asset.duration.seconds
@@ -140,12 +151,6 @@ class ContentMusic: UIView, ContentView {
             let seekTime: CMTime = CMTimeMake(value: 0, timescale: 1)
             player.seek(to: seekTime)
             
-            //Sameer 24/4/2020
-            audioPlayer?.pause()
-            if let timer = timer {
-                timer.invalidate()
-            }
-            isPlaying = false
         }
     }
     

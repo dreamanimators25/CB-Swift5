@@ -9,6 +9,8 @@
 import UIKit
 import AVFoundation
 import YouTubePlayer
+import Alamofire
+import AlamofireImage
 
 protocol SinglePageDelegate {
     func showLink(_ link: String, contentId: Int)
@@ -32,13 +34,15 @@ struct ImageIndex {
 
 var loadVimeoPlayer : ((_ url:String)-> (Void))?
 var loadStatistics : (() -> (Void))?
+var autoPlay : (() -> (Void))?
 
 class SinglePage: UICollectionViewCell {
     
     // MARK: - Views
     var vimeoUrl : String?
+    var delegate : SinglePageDelegate?
     
-    var delegate: SinglePageDelegate?
+    var stickerImageView = UIImageView()
     
     @IBOutlet weak var pageBackgroundView: UIView!
     @IBOutlet weak var pageView: UIView!
@@ -87,7 +91,8 @@ class SinglePage: UICollectionViewCell {
         didSet {
             if isShareable {
                 if shareButton != nil {
-                    shareButton.isHidden = false
+                    //shareButton.isHidden = false
+                    shareButton.isHidden = true
                 }
             } else {
                 if shareButton != nil {
@@ -96,6 +101,7 @@ class SinglePage: UICollectionViewCell {
             }
         }
     }
+    
     var currentPage: Int?
     var currentContentSubPage: Int?
     
@@ -138,17 +144,52 @@ class SinglePage: UICollectionViewCell {
         //isShareable = shareable
         self.consumeAction = consumeAction
         
+        //Sameer 6/5/2020 //
+        //self.shareButton.isHidden = true
+        //self.outboundShareButton.isHidden = true
+        //Sameer 6/5/2020 //
+        
         if content.pages.count > 0 && pageIndex < content.pages.count  {
             let page = content.pages[pageIndex]
             
             print("background = \(background?.file), \(background?.file_url)")
             if let pageBackground = page.backgrounds {
                 background = pageBackground
-                
             }
             components = page.components
+            
+            //Sameer 5/5/2020
+            //Set Sticker Image
+            //let stickerData = content.pages[pageIndex].frameUrl
+            if let URL = content.pages[pageIndex].frameUrl {
+                //let cell = multiPageCollectionView.dequeueReusableCell(withReuseIdentifier: "PageCell", for: IndexPath(row: currentPage, section: 0)) as! SinglePage
+                //cell.createSticker(content?.pages[page] ?? ContentPage(dictionary: [:]))
+                self.stickerImageView.image = nil
+                self.setStickerFromString(URL)
+            }else {
+                self.stickerImageView.image = nil
+                self.stickerImageView.removeFromSuperview()
+                self.contentView.superview?.willRemoveSubview(stickerImageView)
+            }
+            
         }
     }
+    
+    // //Sameer 5/5/2020 // //
+    func setStickerFromString(_ urlString: String) {
+        if let url = URL(string: urlString) {
+            
+            self.stickerImageView.frame = CGRect.init(x: self.contentView.frame.size.width/3, y: self.contentView.frame.size.height - SCREENSIZE.width/3, width: SCREENSIZE.width/3, height: SCREENSIZE.width/3)
+            
+            self.stickerImageView.contentMode = .scaleAspectFill
+            
+            stickerImageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, progress: nil, imageTransition: UIImageView.ImageTransition.crossDissolve(0.5), runImageTransitionIfCached: true, completion: { (response: DataResponse<UIImage>) in
+                
+            })
+            
+        }
+    }
+    // //Sameer 5/5/2020 // //
     
     // MARK: - Actions
     
@@ -173,7 +214,6 @@ extension SinglePage {
         guard let components = components else {
             return
         }
-        
         
         //for i in 0..<components.count {
         for i in 0..<2 {
@@ -204,13 +244,16 @@ extension SinglePage {
         //createButton(consumeAction)
         layoutComponentViews()
         
+        
+//        if let Auto = autoPlay {
+//            Auto()
+//        }
+        
         if let statistic = loadStatistics {
             statistic()
         }
     }
-    
-    
-    
+        
     func createSticker(_ URL : ContentPage) {
         if let file = URL.frameUrl {
             let imageView = ContentImage(frame: CGRect.zero)
@@ -221,7 +264,6 @@ extension SinglePage {
             componentViews.append(imageView)
         }
     }
-
     
     func createImage(_ component: ContentPageComponent) {
         if let file = component.file {
@@ -280,12 +322,10 @@ extension SinglePage {
                     //return .Unknown
                 }
                 
-                
                 let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
                 label.marginEdgePercentage = 0
                 
                 componentViews.append(label)
-                
             }else {
                 var margin = 0.0
                 switch UIScreen.main.nativeBounds.height {
@@ -308,10 +348,8 @@ extension SinglePage {
                     //return .Unknown
                 }
                 
-                
                 let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
                 label.marginEdgePercentage = 0
-                
                 
                 componentViews.append(label)
             }
@@ -321,6 +359,7 @@ extension SinglePage {
     
     func createVideo(_ component: ContentPageComponent) {
         if let file = component.file {
+            /* Sameer 6/5/2020
             let screenWidht = SCREENSIZE.width
             let width = screenWidht-((component.marginHorizontalPercent/100 * 2) * screenWidht)
             let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: width, height: width*0.8), file: file, inlinePlayer: true)
@@ -328,6 +367,20 @@ extension SinglePage {
             video.bottomMarginPercent = component.marginBottomPercent
             video.horizontalMarginPercent = component.marginHorizontalPercent
             componentViews.append(video)
+             */ //old code from client
+            
+            
+            let screenWidht = SCREENSIZE.width
+            let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), file: file, inlinePlayer: true, CNTR:CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
+            //let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), url: file,CNTR: CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
+            
+            video.bottomMarginPercent = 100.0
+            video.marginEdgePercentage = component.marginEdgePercentage
+           // video.bottomMarginPercent = component.marginBottomPercent
+            video.horizontalMarginPercent = component.marginHorizontalPercent
+            
+            self.componentViews.append(video)
+            
         }
     }
     
@@ -341,13 +394,9 @@ extension SinglePage {
     
     func createEmbedVimeo(_ component: ContentPageComponent) {
         if let url = component.youtubeUrl {
-            
             let screenWidht = SCREENSIZE.width
-            
             let embed = ContentEmbedVimeo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), url: url,CNTR: CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
-            
             componentViews.append(embed)
-            
         }
     }
     
@@ -369,6 +418,7 @@ extension SinglePage {
         contentButton?.removeFromSuperview()
         contentButton = nil
     }
+    
     /*
     func createButton(_ consumeAction: ConsumeAction?) {
         // Remove before creating new button
@@ -398,6 +448,7 @@ extension SinglePage {
         var height: CGFloat = 0.0
         pageView.removeConstraints(componentConstraints)
         componentConstraints.removeAll()
+        
         for i in 0..<componentViews.count {
             
             let component = componentViews[i]
@@ -492,6 +543,7 @@ extension SinglePage {
         }
     }
     */
+    
     @IBAction func didTapShareButton(_ sender: AnyObject) {
         share(sender)
     }
@@ -565,6 +617,10 @@ extension SinglePage {
         if backgroundImageView == nil {
             backgroundImageView = ContentFillImage(frame: frame)
             addBackgroundSubview(pageBackgroundView, subview: backgroundImageView!)
+            
+            //Sameer 5/5/2020
+            addBackgroundSubview(pageBackgroundView, subview: stickerImageView)
+            pageBackgroundView.bringSubviewToFront(stickerImageView)
         }
         backgroundImageView?.setImageFromString(file)
     }

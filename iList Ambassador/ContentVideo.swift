@@ -24,6 +24,8 @@ class ContentVideo: UIView, ContentView {
     var playerIsShowing = true
     var inlinePlayer = false
     var inlinePlayerIsedPaused = false
+    
+    var cent: CGPoint! //Sameer 6/5/2020
 
     lazy var button : Button = {
         let button = Button(frame: self.frame)
@@ -33,7 +35,8 @@ class ContentVideo: UIView, ContentView {
         return button
     }()
     
-    init(frame: CGRect, file: String, inlinePlayer: Bool = false) {
+    //Sameer 6/5/2020 CNTR Added for center
+    init(frame: CGRect, file: String, inlinePlayer: Bool = false, CNTR : CGPoint = CGPoint(x: 0,y: 0)) {
         super.init(frame: frame)
         self.inlinePlayer = inlinePlayer
         self.backgroundColor = UIColor.black 
@@ -47,12 +50,21 @@ class ContentVideo: UIView, ContentView {
         width = frame.size.width
         clipsToBounds = true
         
+        //Sameer 6/5/2020
+        if CNTR.x != 0 {
+            cent = CNTR
+            //bottomMarginPercent = 100.0
+        }
+        
         blockPlayBack = { 
             //self.playbackLikelyToKeepUp()
         }
     }
     
     func prepareForReuse() {
+        
+        self.bottomMarginPercent = 0
+        
         videoThumbView?.af_cancelImageRequest()
         videoThumbView?.image = nil
         reset()
