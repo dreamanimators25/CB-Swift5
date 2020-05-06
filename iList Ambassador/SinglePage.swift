@@ -372,13 +372,9 @@ extension SinglePage {
             
             let screenWidht = SCREENSIZE.width
             let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), file: file, inlinePlayer: true, CNTR:CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
-            //let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), url: file,CNTR: CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
             
             video.bottomMarginPercent = 100.0
-            video.marginEdgePercentage = component.marginEdgePercentage
-           // video.bottomMarginPercent = component.marginBottomPercent
-            video.horizontalMarginPercent = component.marginHorizontalPercent
-            
+          
             self.componentViews.append(video)
             
         }

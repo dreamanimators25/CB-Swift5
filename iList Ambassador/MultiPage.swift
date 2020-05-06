@@ -101,9 +101,12 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     var content:Content? {
         didSet {
             self.goThereBtn.isHidden = true;
-            self.linkView.isUserInteractionEnabled = true
-            let gesture = UITapGestureRecognizer.init(target: self, action: #selector(tap))
-            self.linkView.addGestureRecognizer(gesture)
+            
+            //Sameer 6/5/2020
+            //self.linkView.isUserInteractionEnabled = true
+            //let gesture = UITapGestureRecognizer.init(target: self, action: #selector(tap))
+            //self.linkView.addGestureRecognizer(gesture)
+            
             
             //Sameer 6/5/2020 //
             self.shareButton.isHidden = true
@@ -115,7 +118,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             if (content != nil) {
 
                 currentPage = 0;
-                var actionImage: UIImage? = nil
+                //var actionImage: UIImage? = nil //Sameer 6/5/2020
                 
                 //Sameer 6/5/2020 Commented For hide button's image
                 
@@ -156,7 +159,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                 }
          
                 
-                linkImageView.image = actionImage
+                //linkImageView.image = actionImage //Sameer 6/5/2020
                 
                 useButton.imageView?.contentMode = .scaleAspectFit
                 shareButton.imageView?.contentMode = .scaleAspectFit
@@ -693,6 +696,7 @@ extension MultiPage: UICollectionViewDataSource {
 //            self.stickerImageView.removeFromSuperview()
 //            self.contentView.superview?.willRemoveSubview(stickerImageView)
 //        }
+       
 
         
         let isIdentity = content?.pages[page].identity
@@ -745,23 +749,45 @@ extension MultiPage: UICollectionViewDataSource {
             switch action {
             case 1:
                 print("1")
+                // Information
+                // no action button
+                OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = true
+                }
+                
                 //actionImage = UIImage(named: "use3") //Sameer 6/5/2020
                 
             case 2:
                 print("2")
                 //actionImage = UIImage(named: "link") //Sameer 6/5/2020
+                //link
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
-                    self.goThereBtn.isHidden = false;
+                    self.goThereBtn.isHidden = false
                     self.goThereBtn.setTitle("Go There", for: .normal)
                 }
                
             case 3:
                 print("3")
+                //Code
+                OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = false
+                    self.goThereBtn.setTitle("Get Code", for: .normal)
+                }
+                
                 //actionImage = UIImage(named: "code") //Sameer 6/5/2020
             case 4:
                 print("4")
+                // Affiliate
+                OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = false
+                    self.goThereBtn.setTitle("Connect to channel", for: .normal)
+                }
+                
                 //actionImage = UIImage(named: "connect") //Sameer 6/5/2020
             case 5:
                 print("5")
@@ -769,20 +795,28 @@ extension MultiPage: UICollectionViewDataSource {
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
-                    self.goThereBtn.isHidden = false;
+                    self.goThereBtn.isHidden = false
                     self.goThereBtn.setTitle("Read", for: .normal)
                 }
                 
             case 6:
                 print("6")
+                //phone
+                OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = false
+                    self.goThereBtn.setTitle("Call", for: .normal)
+                }
+                
                 //actionImage = UIImage(named: "phone") //Sameer 6/5/2020
             case 7:
                 print("7")
+                //email
                 //actionImage = UIImage(named: "mail") //Sameer 6/5/2020
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
-                    self.goThereBtn.isHidden = false;
+                    self.goThereBtn.isHidden = false
                     self.goThereBtn.setTitle("Email", for: .normal)
                 }
                 
@@ -792,7 +826,7 @@ extension MultiPage: UICollectionViewDataSource {
                 
                 OperationQueue.main.addOperation {
                     self.linkView.isHidden = true
-                    self.goThereBtn.isHidden = false;
+                    self.goThereBtn.isHidden = false
                     self.goThereBtn.setTitle("View Excel", for: .normal)
                 }
                 
@@ -801,6 +835,9 @@ extension MultiPage: UICollectionViewDataSource {
                 //actionImage = UIImage(named: "multiLink")
                
                 OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = true
+                    
                     self.addMultiLinkOnView(page: (self.content?.pages[page])!)
                 }
                 
@@ -809,6 +846,9 @@ extension MultiPage: UICollectionViewDataSource {
                 //actionImage = UIImage(named: "inAppLink")
                 
                 OperationQueue.main.addOperation {
+                    self.linkView.isHidden = true
+                    self.goThereBtn.isHidden = true
+                    
                     self.addInAppLinkOnView()
                 }
                 
@@ -839,7 +879,6 @@ extension MultiPage: UICollectionViewDataSource {
             OperationQueue.main.addOperation {
                 self.linkView.isHidden = true
                 self.goThereBtn.isHidden = true
-                
             }
             
         }

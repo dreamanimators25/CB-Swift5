@@ -62,9 +62,6 @@ class ContentVideo: UIView, ContentView {
     }
     
     func prepareForReuse() {
-        
-        self.bottomMarginPercent = 0
-        
         videoThumbView?.af_cancelImageRequest()
         videoThumbView?.image = nil
         reset()
