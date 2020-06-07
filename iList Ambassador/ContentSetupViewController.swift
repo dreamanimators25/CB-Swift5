@@ -33,7 +33,6 @@ class ContentSetupViewController: UIViewController {
             if let ambassadorship = ambassadorship {
                 ContentSetupViewController.ambassadorId = ambassadorship.id
                 updateContentWithId(ambassadorship.id)
-                
             }
         }
     }
@@ -410,6 +409,9 @@ class ContentSetupViewController: UIViewController {
         //vc will be the view controller on which you will present your alert as you cannot use self because this method is static.
         //vc.present(alert, animated: true, completion: nil)
         present(alert, animated: true, completion: nil)
+        
+        //UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+
     }
     
     func presentUseAlert(_ title: String, _ message: String) {
@@ -540,6 +542,27 @@ class ContentSetupViewController: UIViewController {
                     self.setupStatistics(contents)
                     self.handleContentButtons()
                     self.contentCollectionView.reloadData()
+                    
+                    self.contentCollectionView.performBatchUpdates({
+                        print("Loaded done")
+                    }, completion: { (bool) in
+                        
+                        if isComeFromPush {
+                            
+                            if let indx = self.contents?.firstIndex(where: { $0.id == contentIdPush }) {
+                                self.contentCollectionView.scrollToItem(at: IndexPath.init(row: indx, section: 0), at: [.centeredHorizontally,.centeredVertically], animated: false)
+                                isComeFromPush = false
+                            }
+                            
+                            /*
+                             if let indx = self.contents?.index(where: { $0.id == contentIdPush }) {
+                             self.contentCollectionView.scrollToItem(at: IndexPath.init(row: 0, section: indx), at: [.centeredHorizontally,.centeredVertically], animated: false)
+                             }*/
+                            
+                        }
+                        
+                    })
+                    
                 })
             } else if let error = error {
                 Crashlytics.sharedInstance().recordError(error)
@@ -1003,6 +1026,7 @@ class ContentCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
 protocol ContentView {
     var view: UIView {get}
+    var topMarginPercent: CGFloat {get set}
     var horizontalMarginPercent: CGFloat {get set}
     var bottomMarginPercent: CGFloat {get set}
     var marginEdgePercentage: CGFloat {get set}

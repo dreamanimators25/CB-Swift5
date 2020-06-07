@@ -40,7 +40,15 @@ open class Ambassadorship {
             self.id = id
         }
         //id = dictionary[kAPIKeyId] as! Int
-        brand = Brand(dictionary: dictionary[kAPIKeyBrand] as! [String:Any])
+        
+        //* Sameer 19/5/2020
+        if let brnd = dictionary[kAPIKeyBrand] as? [String:Any] {
+            brand = Brand(dictionary: brnd)
+        }else {
+            brand = Brand(dictionary: [:])
+        }
+        
+        //brand = Brand(dictionary: dictionary[kAPIKeyBrand] as! [String:Any])
         
         if let userId = dictionary[kAPIKeyUserId] as? Int {
             self.userId = userId

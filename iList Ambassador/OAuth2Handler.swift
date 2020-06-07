@@ -14,6 +14,8 @@ import FBSDKLoginKit
 class OAuth2Handler: RequestAdapter, RequestRetrier {
     private typealias RefreshCompletion = (_ succeeded: Bool, _ accessToken: String?, _ refreshToken: String?) -> Void
     
+    public typealias RefreshCompletion2 = (_ succeeded: Bool, _ accessToken: String?, _ refreshToken: String?) -> Void
+    
     private let sessionManager: SessionManager = {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
@@ -144,4 +146,36 @@ class OAuth2Handler: RequestAdapter, RequestRetrier {
                 strongSelf.isRefreshing = false
         }
     }
+    
+    public func refreshExpiredToken(completion: @escaping RefreshCompletion2) {
+        guard !isRefreshing, let refreshToken = refreshToken else { return }
+        
+        isRefreshing = true
+        
+        let urlString = "\(baseURLString)o/token/"
+        
+        let parameters: [String: Any] = [
+            "refresh_token": refreshToken,
+            "grant_type": "refresh_token",
+            "client_id" : iListOAuthClientCredentials.getClientId(),
+            "client_secret" : iListOAuthClientCredentials.getClientSecret()
+        ]
+        
+        print(parameters)
+        
+        //TODO: CHECK OAUTH
+        sessionManager.request(urlString, method: .post, parameters: parameters, encoding: URLEncoding.default).validate()
+            .responseJSON { [weak self] response in
+                guard let strongSelf = self else { return }
+                
+                if let json = response.result.value as? [String: Any], let accessToken = json["access_token"] as? String, let refreshToken = json["refresh_token"] as? String {
+                    completion(true, accessToken, refreshToken)
+                } else {
+                    completion(false, nil, nil)
+                }
+                
+                strongSelf.isRefreshing = false
+        }
+    }
+    
 }

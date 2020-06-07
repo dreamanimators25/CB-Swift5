@@ -17,7 +17,7 @@ protocol ContentImageDelegate {
 class ContentImage: UIImageView, ContentView {
     
     var delegate: ContentImageDelegate?
-    
+    var topMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0

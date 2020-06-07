@@ -15,9 +15,13 @@ import Firebase
 import FirebaseMessaging
 import UserNotifications
 
-//let newBaseURL = "http://104.42.144.12:5000/api/" //Sameer 23/4/2020
-let newBaseURL = "http://40.112.131.121:5000/api/"
+let newBaseURL = "http://104.42.144.12:5000/api/" //Sameer 23/4/2020
+//let newBaseURL = "http://40.112.131.121:5000/api/"
 let apdel = UIApplication.shared.delegate
+
+var isComeFromPush = false
+var contentIdPush = 0
+var channelIdPush = 0
 
 @UIApplicationMain
  class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -26,7 +30,8 @@ let apdel = UIApplication.shared.delegate
 
     fileprivate let kFlurryKey = "B53YVH8X7K994Y2GFK79"
     static var userId: Int?
-      static var token: String?
+    static var token: String?
+    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -47,46 +52,120 @@ let apdel = UIApplication.shared.delegate
         debugPrint("Session number: \( AppManager.numberOfSessions() )")
         
         //Firebase
-        
+        /* Sameer 12/5/2020
         let memoryCapacity = 500 * 1024 * 1024
         let diskCapacity = 500 * 1024 * 1024
         let urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath:"iListDish")
         URLCache.shared = urlCache
         
         // TODO: Want to remove old stuff in user defaults + core data. Maybe remove all and set boolean "migrated_to_version_3" in user defaults. If boolean exists, dont clean again..
-
-        
-        /*
-        if let userData = CustomUserDefault.getUserData() {
-            if userData.id != 0 {
-                UserManager.sharedInstance.storeUserData(userData)
-                
-                AppDelegate.userId = userData.id
-                print("User exists, so navigating to application, user id is: \(String(describing: userData.id))")
-                //self.navigateToApplication()
-                
-                self.updatePushToken()
-                
-                DispatchQueue.main.async(execute: {
-                    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                        appDelegate.navigateToApplication()
-                    }
-                })
-                
-            }else {
-                print("User id is 0, so going to login method")
-                OAuth2Handler.sharedInstance.clearAccessToken()
-                self.navigateToLogin()
-            }
-        }else {
-            print("User id is 0, so going to login method")
-            OAuth2Handler.sharedInstance.clearAccessToken()
-            self.navigateToLogin()
-        }
         */
         
-        //******// 24/2/2020
-        //*
+        // TODO: Replace all login methods and start from the beginning, this is spaghetti code.
+        UserManager.sharedInstance.currentAuthorizedUser { (user) in
+            print("Checking if a user exists")
+            if user?.id != 0 && user != nil {
+                AppDelegate.userId = user?.id
+                print("User exists, so navigating to application, user id is: \(String(describing: user?.id))")
+                self.navigateToApplication()
+            } else {
+                if let userData = CustomUserDefault.getUserData() {
+                    if userData.id != 0 {
+                        
+                        OAuth2Handler.sharedInstance.refreshExpiredToken { (bool, acc_token, ref_token) in
+                            OAuth2Handler.sharedInstance.update(accessToken: acc_token ?? "", refreshToken: ref_token ?? "")
+                        }
+                        
+                        UserManager.sharedInstance.storeUserData(userData)
+                        AppDelegate.userId = userData.id
+                        print("User exists, so navigating to application, user id is: \(String(describing: userData.id))")
+                        //self.navigateToApplication()
+                        
+                        //self.updatePushToken()
+                        
+                        DispatchQueue.main.async(execute: {
+                            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                                appDelegate.navigateToApplication()
+                            }
+                        })
+                        
+                    }else {
+                        print("User id is 0, so going to login method")
+                        OAuth2Handler.sharedInstance.clearAccessToken()
+                        self.navigateToLogin()
+                    }
+                }else {
+                    print("User id is 0, so going to login method")
+                    OAuth2Handler.sharedInstance.clearAccessToken()
+                    self.navigateToLogin()
+                }
+            }
+        }
+        
+        
+        //CustomUserDefault.saveUserName(name: "prateek@appin.se")
+        //CustomUserDefault.saveUserPassword(password: "mobile1234")
+        
+        //******// 19/5/2020 Written Code from Sameer
+        /*
+        // TODO: Replace all login methods and start from the beginning, this is spaghetti code.
+        UserManager.sharedInstance.currentAuthorizedUser { (user) in
+            print("Checking if a user exists")
+            if user?.id != 0 && user != nil {
+                
+                AppDelegate.userId = user?.id
+                print("User exists, so navigating to application, user id is: \(String(describing: user?.id))")
+                self.navigateToApplication()
+                
+            } else {
+                //Sameer 16/5/2020
+                //print("User id is 0, so going to login method")
+                //OAuth2Handler.sharedInstance.clearAccessToken()
+                //self.navigateToLogin()
+                
+                
+                if let id = CustomUserDefault.getUserName() , id != "" {
+                    print("\(id)")
+                    let id = CustomUserDefault.getUserName() ?? ""
+                    let pw = CustomUserDefault.getUserPassword() ?? ""
+                    
+                    UserManager.sharedInstance.authenticateWithUsername(id, password: pw) { (user, error, text) in
+                        
+                        if text != nil {
+                            self.showErr(str: text!)
+                        } else if error != nil {
+                            self.showErr(str: "Server error")
+                        } else {
+                            AppDelegate.userId = user?.id
+                            
+                            CustomUserDefault.saveUserData(modal: user ?? User())
+                            
+                            print("The login was successful, so navigating to the applocation.")
+                            self.updatePushToken()
+                            DispatchQueue.main.async(execute: {
+                                if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                                    appDelegate.navigateToApplication()
+                                }
+                            })
+                            
+                        }
+                    }
+                    
+                }else {
+                    
+                    print("User id is 0, so going to login method")
+                    OAuth2Handler.sharedInstance.clearAccessToken()
+                    self.navigateToLogin()
+                    
+                }
+                
+            }
+        }
+        */
+        //******//
+        
+        //******// 19/5/2020 Written Code from client
+        /*
         // TODO: Replace all login methods and start from the beginning, this is spaghetti code.
         UserManager.sharedInstance.currentAuthorizedUser { (user) in
             print("Checking if a user exists")
@@ -100,7 +179,7 @@ let apdel = UIApplication.shared.delegate
                 self.navigateToLogin()
             }
         }
-        //*/
+        */
         //******//
         
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -133,8 +212,6 @@ let apdel = UIApplication.shared.delegate
             }
         }
         
-        
-
         return true
     }
 
@@ -176,7 +253,96 @@ let apdel = UIApplication.shared.delegate
                                                                      annotation: annotation)
     }
     
+//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+//
+//        //displaying the ios local notification when app is in foreground
+//        completionHandler([.alert, .badge, .sound])
+//    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let notiData = response.notification.request.content.userInfo
+        print(notiData)
+        NSLog("[UserNotificationCenter] didReceiveResponse: \(notiData)")
+        
+        isComeFromPush = true
+        
+        if let dict = notiData as NSDictionary? as! [String:Any]? {
+            //print(dict[key])
+            NSLog("[UserNotificationCenter] dict: \(dict)")
+            
+            contentIdPush = (dict["gcm.notification.content_id"] as! NSString).integerValue
+            channelIdPush = (dict["gcm.notification.ambassadorship"] as! NSString).integerValue
+            
+            if (dict["gcm.notification.type"] as! NSString).integerValue == 0 {
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    self.window?.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+                    
+                    //let nav = UINavigationController(rootViewController: UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "BrandsViewController"))
+                    
+                    //self.window?.rootViewController = nav
+                }
+                
+                DispatchQueue.main.async(execute: {
+                    
+                    
+                })
+                
+                // let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                // let destinationViewController = storyboard.instantiateViewController(withIdentifier: "BrandsViewController") as! BrandsViewController
+                // let navigationController = self.window?.rootViewController as! UINavigationController
+                //   navigationController.pushViewController(nav, animated: false)
+                
+            }
+        }
+        
+        completionHandler()
+    }
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        let notiData = notification.request.content.userInfo
+        print(notiData)
+        
+        NSLog("[UserNotificationCenter] willPresentNotification: \(notiData)")
+        
+        isComeFromPush = true
+        
+        if let dict = notiData as NSDictionary? as! [String:Any]? {
+            //print(dict[key])
+            NSLog("[UserNotificationCenter] dict: \(dict)")
+            
+            contentIdPush = (dict["gcm.notification.content_id"] as! NSString).integerValue
+            channelIdPush = (dict["gcm.notification.ambassadorship"] as! NSString).integerValue
+            
+            if (dict["gcm.notification.type"] as! NSString).integerValue == 0 {
+                
+                DispatchQueue.main.async(execute: {
+                    //let nav = UINavigationController(rootViewController: UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "BrandsViewController"))
+                    
+                    //self.window?.rootViewController = nav
+                })
+                
+               // let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               // let destinationViewController = storyboard.instantiateViewController(withIdentifier: "BrandsViewController") as! BrandsViewController
+                // let navigationController = self.window?.rootViewController as! UINavigationController
+                //   navigationController.pushViewController(nav, animated: false)
+                
+                
+                /*
+                if let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "BrandsViewController") as? BrandsViewController {
+                    if let window = self.window, let rootViewController = window.rootViewController {
+                        var currentController = rootViewController
+                        while let presentedController = currentController.presentedViewController {
+                            currentController = presentedController
+                        }
+                        currentController.present(controller, animated: true, completion: nil)
+                    }
+                }*/
+                
+            }
+        }
         
         //displaying the ios local notification when app is in foreground
         completionHandler([.alert, .badge, .sound])
@@ -278,7 +444,6 @@ let apdel = UIApplication.shared.delegate
             self.window?.rootViewController = nav
         })
     }
-    
 
 
     //MARK: - Updating Push Notification Token -
@@ -294,6 +459,14 @@ let apdel = UIApplication.shared.delegate
                 }
             }
         })
+    }
+    
+    func showErr(str: String) {
+        let alertController = UIAlertController(title: nil, message: str, preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        //self.present(alertController, animated: true, completion: nil)
+        self.window?.rootViewController?.present(alertController, animated: true, completion: nil)
+
     }
     
 }

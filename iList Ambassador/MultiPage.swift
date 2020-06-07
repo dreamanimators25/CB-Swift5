@@ -280,6 +280,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
             switch action {
             
             case 1:
+                
                 //print("id = \(ContentSetupViewController.ambassadorId)")
                 
                 if let id = content?.pages[currentPage].id {
@@ -300,10 +301,13 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     }
                 }
             case 3:
+                
                 DispatchQueue.main.async {
                     self.delegate?.showMessage("This is your code", idin)
                 }
+                
             case 5:
+                
                 DispatchQueue.main.async {
                     if #available(iOS 10.0, *) {
                         UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
@@ -311,6 +315,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                         UIApplication.shared.openURL(URL(string : idin)!)
                     }
                 }
+                
             case 4:
                 AmbassadorshipManager.sharedInstance.requestAmbassadorhipWithCode(idin) { (ambassadorship, error, code) in
                     var message = ""
@@ -334,6 +339,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     
                 }
             case 2:
+
                 DispatchQueue.main.async {
                     if #available(iOS 10.0, *) {
                         UIApplication.shared.open(URL(string : idin)!, options: [:], completionHandler: { (status) in })
@@ -343,6 +349,7 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                 }
             
             case 6:
+                
                 DispatchQueue.main.async {
                     guard let number = URL(string: "tel://\(idin)") else { return }
                     if #available(iOS 10.0, *) {
@@ -351,16 +358,20 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                         UIApplication.shared.openURL(number)
                     }
                 }
+                
             case 7:
+               
                 DispatchQueue.main.async {
                     self.delegatePaser?.showNewLink(link: idin)
                 }
+                
 //                guard let number = URL(string: "mailto:\(idin)") else { return }
 //                if #available(iOS 10.0, *) {
 //                    UIApplication.shared.open(number, options: [:], completionHandler: { (status) in })
 //                } else {
 //                    UIApplication.shared.openURL(number)
 //                }
+                
             case 8:
                 
                 Downloader.load(url: URL.init(string: idin)!, to: (content?.pages[currentPage].id)!) { (msg) in
@@ -368,13 +379,24 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
                     //self.delegate?.presentUseAlert("", "File download & save!")
                     //self.delegate?.showAlertOnCell("", msg)
                     
-                    self.delegate?.showAlertForIndexOnCell("", message: msg, alertButtonTitles: ["OK"], alertButtonStyles: [.default], vc: UIViewController(), completion: { (index) in
-                        //print("T##items: Any...##Any")
+                    DispatchQueue.main.async {
                         
-                        guard let url = URL(string: idin) else { return }
-                        UIApplication.shared.open(url)
-                        
-                    })
+                        self.delegate?.showAlertForIndexOnCell("", message: msg, alertButtonTitles: ["OK"], alertButtonStyles: [.default], vc: UIViewController(), completion: { (index) in
+                            //print("T##items: Any...##Any")
+                            
+                            DispatchQueue.main.async {
+                                guard let url = URL(string: idin) else { return }
+                                //UIApplication.shared.open(url) //Sameer 12/5/2020 for crash log
+                                
+                                if #available(iOS 10.0, *) {
+                                    UIApplication.shared.open(url, options: [:], completionHandler: { (status) in })
+                                } else {
+                                    UIApplication.shared.openURL(url)
+                                }
+                            }
+                            
+                        })
+                    }
                 }
             case 9:
                 print("9")
@@ -573,7 +595,6 @@ class MultiPage: UICollectionViewCell, backgroundDelegate {
     @IBAction func outboundShareButtonPressed(_ sender: Any) {
         if let content = content {
             delegate?.shareContentOutbound(content.id)
-            
         }
     }
     
@@ -629,9 +650,14 @@ extension MultiPage: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-            self.stickerImageView.image = nil
-            self.stickerImageView.removeFromSuperview()
-            self.contentView.superview?.willRemoveSubview(stickerImageView)
+        
+        if let statistic = loadStatistics {
+            statistic()
+        }
+        
+//            self.stickerImageView.image = nil
+//            self.stickerImageView.removeFromSuperview()
+//            self.contentView.superview?.willRemoveSubview(stickerImageView)
         
             self.multiLinkBaseView.removeFromSuperview()
             self.contentView.superview?.willRemoveSubview(multiLinkBaseView)
@@ -644,6 +670,7 @@ extension MultiPage: UICollectionViewDataSource {
             self.contentView.superview?.willRemoveSubview(base3)
     }
     
+    /*
     func setImageFromString(_ urlString: String) {
         if let url = URL(string: urlString) {
             
@@ -676,7 +703,7 @@ extension MultiPage: UICollectionViewDataSource {
                 
             })
         }
-    }
+    }*/
     
     func handlePageButtons(_ page: Int) {
         
@@ -1380,12 +1407,14 @@ extension MultiPage: UICollectionViewDataSource {
 
 
 extension MultiPage : UIScrollViewDelegate, UICollectionViewDelegate {
+   
     // MARK: - UIScrollViewDelegate
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         OperationQueue.main.addOperation {
             self.goThereBtn.isHidden = true
         }
+        
         var scrollOffset = scrollView.contentOffset.y
         let contentHeight = multiPageCollectionView.contentSize.height - multiPageCollectionView.frame.size.height
         var indexPath:IndexPath?
@@ -1446,7 +1475,6 @@ class Downloader {
                     print("Success: \(statusCode)")
                 }
               
-                
                 let fileName = "\(localFileName).xls"
                 //let fileName = downloadTask.originalRequest?.url?.lastPathComponent
                 let path = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
@@ -1481,9 +1509,6 @@ class Downloader {
                     }
                     
                 //}
-                
-                
-                
                 
                 
                 /*

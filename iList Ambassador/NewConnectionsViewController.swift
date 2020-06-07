@@ -684,8 +684,7 @@ class RequestsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate, 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 extension NewConnectionsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    @objc
-    func handleLongPress(longPressGR: UILongPressGestureRecognizer) {
+    @objc func handleLongPress(longPressGR: UILongPressGestureRecognizer) {
         if longPressGR.state == .ended {
             return
         }
@@ -701,7 +700,7 @@ extension NewConnectionsViewController: UICollectionViewDelegate, UICollectionVi
                 //showRemoveDialog(connection: connection)
                 
                 let connection = ambassadorships[indexPath.row]
-                revokIndex = indexPath.row
+                revokIndex = indexPath.row - 1 //Sameer 12/5/2020 crash log
                 showRemoveDialog(connection: connection)
                 
             }

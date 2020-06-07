@@ -154,7 +154,7 @@ open class AutoPurgingImageCache: ImageRequestCache {
             NotificationCenter.default.addObserver(
                 self,
                 selector: #selector(AutoPurgingImageCache.removeAllImages),
-                name: nil, //Notification.Name.UIApplication.didReceiveMemoryWarningNotification,
+                name: UIApplication.didReceiveMemoryWarningNotification, //Notification.Name.UIApplication.didReceiveMemoryWarningNotification,
                 object: nil
             )
         #endif

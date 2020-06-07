@@ -34,6 +34,7 @@ private let kAPIKeyMetaTextAlign = "text_align"
 private let kAPIKeyMetaFontSize = "font_size"
 private let kAPIKeyMetaColor = "color"
 private let kAPIKeyMetaBgColor = "box_color"
+private let kAPIKeyMetaBgBoxBool = "background_box"
 private let kAPIKeyMetaText = "text"
 private let kAPIKeyMetaHeight = "height"
 private let kAPIKeyMetaWidth = "width"
@@ -73,6 +74,7 @@ open class RewardPageComponent {
             
             var color = UIColor.black
             var BGColor = UIColor.clear
+            var BGBoxBool = ""
             var text = ""
             if let metaDataText = meta[kAPIKeyMetaText] as? String {
                 text = metaDataText
@@ -83,6 +85,9 @@ open class RewardPageComponent {
             }
             if let metaDataBgColor = meta[kAPIKeyMetaBgColor] as? String {
                 BGColor = UIColor(hexString: metaDataBgColor)
+            }
+            if let bgboxBool = meta[kAPIKeyMetaBgBoxBool] as? String {
+                BGBoxBool = bgboxBool
             }
             if let metaDataFontSize = meta[kAPIKeyMetaFontSize] as? String {
                 fontSize = CGFloat(NSString(string: metaDataFontSize).floatValue)
@@ -123,7 +128,7 @@ open class RewardPageComponent {
                     break
                 }
             }
-            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, text: text, height: height, width: width, textAlignment: textAlignment)
+            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, bgBox: BGBoxBool, text: text, height: height, width: width, textAlignment: textAlignment)
         }
         
         if let order = dictionary[kAPIKeyOrder] as? Int {

@@ -114,7 +114,8 @@ class LoginAndRegisterViewController: BaseViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "LostPasswordViewController")
         let nav = UINavigationController(rootViewController: vc)
-        self.present(nav, animated: true, completion: nil)    }
+        self.present(nav, animated: true, completion: nil)
+    }
     
     @IBAction func createAccPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -124,7 +125,6 @@ class LoginAndRegisterViewController: BaseViewController {
         
         self.present(nav, animated: true, completion: nil)
     }
-    
     
     @IBAction func agreeAction(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -243,6 +243,8 @@ class LoginAndRegisterViewController: BaseViewController {
 //                    self.present(vc, animated: true, completion: nil)
                     
                     CustomUserDefault.saveUserData(modal: user ?? User())
+                    CustomUserDefault.saveUserName(name: self.emailTextField.text!)
+                    CustomUserDefault.saveUserPassword(password: self.passwordTextField.text!)
 //
                     self.handleSuccessfullyAuthenticatedWithUser()
                 }

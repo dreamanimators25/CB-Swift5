@@ -13,6 +13,7 @@ import AlamofireImage
 
 class ContentMusic: UIView, ContentView {
     
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0
@@ -29,6 +30,8 @@ class ContentMusic: UIView, ContentView {
     var circularProgress: CircularProgress?
     var playImg = UIImage(named: "play-white")
     var pauseImg = UIImage(named: "pause-white")
+    
+    var cent: CGPoint!
 
     lazy var timeLabel : UILabel = {
         let label = UILabel()
@@ -41,7 +44,7 @@ class ContentMusic: UIView, ContentView {
     }()
     
     lazy var imageView : CircularImageView = {
-        let imageView:CircularImageView = CircularImageView(frame: CGRect.zero)
+        let imageView : CircularImageView = CircularImageView(frame: CGRect.zero)
         imageView.contentMode = .scaleAspectFill
         imageView.isUserInteractionEnabled = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +67,7 @@ class ContentMusic: UIView, ContentView {
         return button
     }()
     
-    init(frame: CGRect, file: String, thumb: String?) {
+    init(frame: CGRect, file: String, thumb: String?, CNTR : CGPoint = CGPoint(x: 0,y: 0)) {
         super.init(frame:frame)
         audioPlayer = MPCacher.sharedInstance.getObjectForKey(file) as? Player
         audioPlayer?.isMuted = false
@@ -73,13 +76,15 @@ class ContentMusic: UIView, ContentView {
         width = frame.size.width
         clipsToBounds = true
         
+        cent = CNTR
+        bottomMarginPercent = 100.0
+        
         //Sameer 5/5/2020
         //loadStatistics = {
             //self.isPlaying = true
             //self.audioPlayer?.play()
             //self.button.setImage(self.pauseImg, for: UIControl.State())
             //self.startTimer()
-            
             //self.button.sendActions(for: .touchUpInside)
         //}
         
@@ -90,7 +95,6 @@ class ContentMusic: UIView, ContentView {
                     
                     UIView.animate(withDuration: 0.3, animations: {
                         self.button.alpha = 1 //Sameer 24/4/2020
-    
                     })
                 })
                 setupMusic()
@@ -175,8 +179,7 @@ class ContentMusic: UIView, ContentView {
         timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTime), userInfo: nil, repeats: true)
     }
     
-    @objc  
-    func updateTime() {
+    @objc func updateTime() {
         if let audioPlayer = audioPlayer, let currentItem = audioPlayer.currentItem {
             let current = currentItem.currentTime().seconds
             let minutes = floor(current.truncatingRemainder(dividingBy: 3600) / 60)

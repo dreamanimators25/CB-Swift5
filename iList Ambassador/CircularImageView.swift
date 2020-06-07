@@ -11,7 +11,7 @@ import UIKit
 class CircularImageView: UIImageView {
 
     var maskview = UIImageView()
-    
+        
     // MARK: - View life cycle
     
     override init(frame: CGRect) {
@@ -29,6 +29,7 @@ class CircularImageView: UIImageView {
         maskview.image = UIImage(named: "PolygonMask")
         maskview.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         self.mask = maskview
+        
     }
     
     override func layoutSubviews() {
@@ -36,6 +37,6 @@ class CircularImageView: UIImageView {
         maskview.contentMode = .scaleAspectFit
         maskview.frame = self.bounds
         //layer.cornerRadius = bounds.width/2.0
-        
     }
+    
 }

@@ -16,6 +16,7 @@ import AVKit
 class ContentEmbed: UIView, ContentView {
     
     var view: UIView { return self }
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0
@@ -38,7 +39,22 @@ class ContentEmbed: UIView, ContentView {
         clipsToBounds = true
         
         cent = CNTR
-        bottomMarginPercent = 100.0
+        //bottomMarginPercent = 100.0
+        
+        switch UIScreen.main.nativeBounds.height {
+        //case 960:
+            //return .iPhone4
+        case 1136:
+            self.bottomMarginPercent = 70.0
+        case 1334:
+            self.bottomMarginPercent = 80.0
+        case 2208, 1920:
+            self.bottomMarginPercent = 90.0
+        case 2436:
+            self.bottomMarginPercent = 110.0
+        default:
+            self.bottomMarginPercent = 110.0
+        }
     
         videoPlayer = YouTubePlayerView(frame: frame)
         
@@ -64,6 +80,7 @@ class ContentEmbed: UIView, ContentView {
 class ContentEmbedVimeo: UIView, ContentView {
     
     var view: UIView { return self }
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0
@@ -87,7 +104,22 @@ class ContentEmbedVimeo: UIView, ContentView {
         clipsToBounds = true
         
         cent = CNTR
-        bottomMarginPercent = 80.0
+        //bottomMarginPercent = 100.0
+        
+                            switch UIScreen.main.nativeBounds.height {
+                            //case 960:
+                                //return .iPhone4
+                            case 1136:
+                                self.bottomMarginPercent = 70.0
+                            case 1334:
+                                self.bottomMarginPercent = 80.0
+                            case 2208, 1920:
+                                self.bottomMarginPercent = 90.0
+                            case 2436:
+                                self.bottomMarginPercent = 110.0
+                            default:
+                                self.bottomMarginPercent = 110.0
+                            }
         
         let btn_vimeo = UIButton.init(frame: CGRect.init(x: 0, y: 0, width: 70, height: 70))
         btn_vimeo.center = self.center

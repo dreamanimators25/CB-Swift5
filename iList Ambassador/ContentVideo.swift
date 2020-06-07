@@ -11,6 +11,7 @@ import UIKit
 
 class ContentVideo: UIView, ContentView {
     
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0

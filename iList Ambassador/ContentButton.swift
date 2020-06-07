@@ -11,7 +11,7 @@ import UIKit
 class ContentButton: Button, ContentView {
 
     var touchUpInsideBlock: (()->Void)?
-    
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 12.0
     var bottomMarginPercent: CGFloat = 8.2
     var marginEdgePercentage: CGFloat = 0.0

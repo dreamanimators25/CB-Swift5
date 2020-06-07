@@ -217,6 +217,7 @@ final class BrandsViewController: UIViewController, BrandAddedProtocol {
             guard let self = self else { return }
             
             if let ambassadorships = ambassadorships {
+                
                 self.ambassadorships = ambassadorships
                 self.collectionView?.reloadDataForConstraints()
                 self.chinaBasinBrandView.isHidden = ambassadorships.isEmpty
@@ -228,13 +229,36 @@ final class BrandsViewController: UIViewController, BrandAddedProtocol {
                 self.chinaBasinImageView.layer.cornerRadius = self.chinaBasinImageView.frame.height / 2
                 self.chinaBasinImageView.layer.borderWidth = 2
                 self.chinaBasinImageView.layer.borderColor = Color.newGray.cgColor
+                
                 if let url = URL(string: ambassadorships[0].brand.logotypeUrl) {
                     self.chinaBasinImageView.af_setImage(withURL: url)
                     self.chinaBasinImageView.backgroundColor = Color.backgroundColorFadedDark()
                 } else {
-                    //self.chinaBasinImageView.image = UIImage(named: "defaultbrand")
+                    self.chinaBasinImageView.image = UIImage(named: "defaultbrand")
                     self.chinaBasinImageView.backgroundColor = Color.backgroundColorFadedDark()
                 }
+                
+                //Written by sameer on 6/3/20
+                if isComeFromPush {
+                    
+                    if ambassadorships.contains(where: { $0.id == channelIdPush }) {
+                        
+                        if self.user!.isCurrentUser {
+                            let contentViewController = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "ContentController") as! ContentSetupViewController
+                            
+                            if let ind = ambassadorships.index(where: { $0.id == channelIdPush }) {
+                                contentViewController.ambassadorship = ambassadorships[ind]
+                                contentViewController.user = self.user
+                                self.delegate?.showMenu(true)
+                                self.navigationController?.pushViewController(contentViewController, animated: true)
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
             } else if let error = error {
                 Crashlytics.sharedInstance().recordError(error)
             }
@@ -299,7 +323,7 @@ extension BrandsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "brandCell", for: indexPath)
-//        let item = ambassadorships[indexPath.row + 1]
+//      let item = ambassadorships[indexPath.row + 1]
         let item = ambassadorships[indexPath.row]
 
         if let imageView = cell.contentView.subviews[0] as? UIImageView {
@@ -310,6 +334,7 @@ extension BrandsViewController: UICollectionViewDelegate, UICollectionViewDataSo
             imageView.layer.borderWidth = 2
             imageView.layer.borderColor = Color.newGray.cgColor
             
+            
             if let url = URL(string: item.brand.logotypeUrl) {
                 imageView.af_setImage(withURL: url)
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
@@ -317,10 +342,11 @@ extension BrandsViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 //imageView.image = UIImage(named: "defaultbrand")
                 imageView.backgroundColor = Color.backgroundColorFadedDark()
             }
+            
         }
+        
         let lbl = cell.viewWithTag(1) as! UILabel
-            lbl.text = item.brand.name
-
+        lbl.text = item.brand.name
         
         return cell
     }

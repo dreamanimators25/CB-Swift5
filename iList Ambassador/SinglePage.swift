@@ -179,13 +179,26 @@ class SinglePage: UICollectionViewCell {
     func setStickerFromString(_ urlString: String) {
         if let url = URL(string: urlString) {
             
-            self.stickerImageView.frame = CGRect.init(x: self.contentView.frame.size.width/3, y: self.contentView.frame.size.height - SCREENSIZE.width/3, width: SCREENSIZE.width/3, height: SCREENSIZE.width/3)
-            
-            self.stickerImageView.contentMode = .scaleAspectFill
+            //self.stickerImageView.frame = CGRect.init(x: self.contentView.frame.size.width/3, y: self.contentView.frame.size.height - SCREENSIZE.width/3, width: SCREENSIZE.width - 40, height: SCREENSIZE.width/3)
             
             stickerImageView.af_setImage(withURL: url, placeholderImage: nil, filter: nil, progress: nil, imageTransition: UIImageView.ImageTransition.crossDissolve(0.5), runImageTransitionIfCached: true, completion: { (response: DataResponse<UIImage>) in
                 
+                self.pageBackgroundView.addSubview(self.stickerImageView)
+                self.pageBackgroundView.bringSubviewToFront(self.stickerImageView)
+                
             })
+            
+            self.stickerImageView.frame = CGRect.init(x: 0, y: self.contentView.frame.size.height - SCREENSIZE.width/3, width: SCREENSIZE.width, height: SCREENSIZE.width/3)
+            
+            self.stickerImageView.contentMode = .scaleToFill
+            self.stickerImageView.clipsToBounds = true
+            
+            
+//            self.stickerImageView.translatesAutoresizingMaskIntoConstraints = false
+//            let horizontalConstraint = NSLayoutConstraint(item: self.stickerImageView, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.contentView.superview, attribute:NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+//            let verticalConstraint = NSLayoutConstraint(item: self.stickerImageView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.contentView.superview, attribute: NSLayoutConstraint.Attribute.bottom, multiplier: 1, constant: -10)
+//
+//            NSLayoutConstraint.activate([horizontalConstraint,verticalConstraint])
             
         }
     }
@@ -223,7 +236,7 @@ extension SinglePage {
             case .Image:
                 createImage(component)
             case .Text:
-                createText(component)
+                createText(component, cIndex: i)
             case .Video:
                 createVideo(component)
             case .Sound:
@@ -249,9 +262,10 @@ extension SinglePage {
 //            Auto()
 //        }
         
-        if let statistic = loadStatistics {
-            statistic()
-        }
+        //Sameer 19/5/20
+//        if let statistic = loadStatistics {
+//            statistic()
+//        }
     }
         
     func createSticker(_ URL : ContentPage) {
@@ -292,33 +306,33 @@ extension SinglePage {
         }
     }
     
-    func createText(_ component: ContentPageComponent) {
+    func createText(_ component: ContentPageComponent, cIndex: Int) {
         if let meta = component.meta {
             //let label = ContentText(meta: meta, bottomMarginPercent: component.marginBottomPercent, horizontalMarginPercent: component.marginHorizontalPercent)
             //label.marginEdgePercentage = component.marginEdgePercentage
             //componentViews.append(label)
             //old code from client
             
-            
+            //*
             if meta.text == "Vimeo" {
                 var margin = 0.0
                 switch UIScreen.main.nativeBounds.height {
                 //case 960:
                     //return .iPhone4
                 case 1136:
-                    margin = 5.0
+                    margin = 20.0
                     //return .iPhone5
                 case 1334:
-                    margin = 5.0
+                    margin = 25.0
                     //return .iPhone6
                 case 2208, 1920:
-                    margin = 10.0
+                    margin = 30.0
                     //return .iPhone6Plus
                 case 2436:
-                    margin = 15.0
+                    margin = 40.0
                     //return .iPhoneX
                 default:
-                    margin = 15.0
+                    margin = 55.0
                     //return .Unknown
                 }
                 
@@ -332,27 +346,34 @@ extension SinglePage {
                 //case 960:
                     //return .iPhone4
                 case 1136:
-                    margin = 25.0
+                    margin = Double(cIndex * 15) + 15.0
+                    //margin = 20.0
                     //return .iPhone5
                 case 1334:
-                    margin = 35.0
+                    margin = Double(cIndex * 15) + 20.0
+                    //margin = 25.0
                     //return .iPhone6
                 case 2208, 1920:
-                    margin = 45.0
+                    margin = Double(cIndex * 15) + 25.0
+                    //margin = 30.0
                     //return .iPhone6Plus
                 case 2436:
-                    margin = 55.0
+                    margin = Double(cIndex * 15) + 35.0
+                    //margin = 40.0
                     //return .iPhoneX
                 default:
-                    margin = 55.0
+                    margin = Double(cIndex * 15) + 45.0
+                    //margin = 55.0
                     //return .Unknown
                 }
                 
-                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
-                label.marginEdgePercentage = 0
+                //let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15)
+                //label.marginEdgePercentage = 0
+                
+                let label = ContentText(meta: meta, bottomMarginPercent: CGFloat(margin), horizontalMarginPercent: 15, CNTR:CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
                 
                 componentViews.append(label)
-            }
+            }//*/
             
         }
     }
@@ -372,9 +393,7 @@ extension SinglePage {
             
             let screenWidht = SCREENSIZE.width
             let video = ContentVideo(frame: CGRect(x: 0, y: 0,width: screenWidht, height: screenWidht * 0.8), file: file, inlinePlayer: true, CNTR:CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
-            
             video.bottomMarginPercent = 100.0
-          
             self.componentViews.append(video)
             
         }
@@ -402,10 +421,16 @@ extension SinglePage {
     
     func createSound(_ component: ContentPageComponent) {
         if let file = component.file {
+            /* Sameer 12/5/2020
             let width = 0.75*SCREENSIZE.width
             let music = ContentMusic(frame: CGRect(x: 0, y: 0,width: width, height: width*0.95), file: file, thumb: component.thumb)
             music.marginEdgePercentage = component.marginEdgePercentage
             music.bottomMarginPercent = component.marginBottomPercent
+            componentViews.append(music)
+            */ //old code from client
+            
+            let width = 0.75*SCREENSIZE.width
+            let music = ContentMusic(frame: CGRect(x: 0, y: 0,width: width, height: width*0.95), file: file, thumb: component.thumb, CNTR: CGPoint.init(x: self.contentView.frame.midX, y: self.contentView.frame.midY))
             componentViews.append(music)
         }
     }
@@ -615,7 +640,8 @@ extension SinglePage {
             addBackgroundSubview(pageBackgroundView, subview: backgroundImageView!)
             
             //Sameer 5/5/2020
-            addBackgroundSubview(pageBackgroundView, subview: stickerImageView)
+            //addBackgroundSubview(pageBackgroundView, subview: stickerImageView)
+            pageBackgroundView.addSubview(stickerImageView)
             pageBackgroundView.bringSubviewToFront(stickerImageView)
         }
         backgroundImageView?.setImageFromString(file)

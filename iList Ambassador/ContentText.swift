@@ -10,6 +10,7 @@ import UIKit
 
 class ContentText: UITextView, ContentView {
     
+    var topMarginPercent: CGFloat = 0.0
     var horizontalMarginPercent: CGFloat = 0.0
     var bottomMarginPercent: CGFloat = 0.0
     var marginEdgePercentage: CGFloat = 0.0
@@ -19,17 +20,20 @@ class ContentText: UITextView, ContentView {
     var backColor : UIColor = UIColor.clear
     
     var color: UIColor = UIColor.white
+    var cent: CGPoint!
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         setup()
     }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()
     }
     
-    convenience init(meta: Meta, bottomMarginPercent: CGFloat, horizontalMarginPercent: CGFloat) {
+    convenience init(meta: Meta, bottomMarginPercent: CGFloat, horizontalMarginPercent: CGFloat, CNTR : CGPoint = CGPoint(x: 0,y: 0)) {
+        
         self.init(frame: CGRect.zero, textContainer: nil)
         self.horizontalMarginPercent = horizontalMarginPercent
         self.bottomMarginPercent = bottomMarginPercent
@@ -39,13 +43,111 @@ class ContentText: UITextView, ContentView {
         self.color = meta.color
         self.textAlignment = meta.textAlignment
         
+        //print("Meta Text is :- \(meta.text)")
+        //print("backGround Box is :- \(meta.background_box)")
+        //print(meta.bgColor)
+        //print(meta.size)
+        
+        //cent = CNTR
+        //self.bottomMarginPercent = 100.0
         //self.backColor = meta.bgColor
         
-        if self.text == "" {
-            self.backColor = UIColor.clear
+        //*
+        if meta.background_box == "false" {
+            
+            //self.backColor = UIColor.clear
+            //cent = CNTR
+            //self.bottomMarginPercent = bottomMarginPercent
+            
+            if self.text == "" {
+                self.backColor = UIColor.clear
+                
+                print("Meta Text is :- \(meta.text)")
+            }else {
+                print("Meta Text is :- \(meta.text)")
+                
+                //self.bottomMarginPercent = 45
+            }
+            
+        }else if meta.background_box == "true" {
+            
+            if self.text.count < 20 {
+                if self.text == "" {
+                    self.backColor = UIColor.clear
+                    
+                    print("Meta Text is :- \(meta.text)")
+                }else {
+                    //cent = CNTR
+                    //self.bottomMarginPercent = bottomMarginPercent
+
+                    //self.bottomMarginPercent = 45
+                    print("Meta Text is :- \(meta.text)")
+                    
+                    self.backColor = meta.bgColor
+                }
+                
+            }else {
+                if self.text == "" {
+                    self.backColor = UIColor.clear
+                    
+                    print("Meta Text is :- \(meta.text)")
+                }else {
+                    cent = CNTR
+                    ///////////////////////////////////////////////////////
+//                    switch UIScreen.main.nativeBounds.height {
+//                    //case 960:
+//                        //return .iPhone4
+//                    case 1136:
+//                        self.bottomMarginPercent = 50.0
+//                        //return .iPhone5
+//                    case 1334:
+//                        self.bottomMarginPercent = 60.0
+//                        //return .iPhone6
+//                    case 2208, 1920:
+//                        self.bottomMarginPercent = 80.0
+//                        //return .iPhone6Plus
+//                    case 2436:
+//                        self.bottomMarginPercent = 90.0
+//                        //return .iPhoneX
+//                    default:
+//                        self.bottomMarginPercent = 90.0
+//                        //return .Unknown
+//                    }
+                    ///////////////////////////////////////////////////////
+                    //self.bottomMarginPercent = 80.0
+                    //self.bottomMarginPercent = 45.0
+                    
+                    
+                    print("Meta Text is :- \(meta.text)")
+                    //self.bottomMarginPercent = bottomMarginPercent + 20
+                    self.backColor = meta.bgColor
+                }
+            }
+            
+            
+            /*
+            if self.text == "" {
+                self.backColor = UIColor.clear
+            }else {
+                //cent = CNTR
+                self.bottomMarginPercent = 80.0
+                
+                self.backColor = meta.bgColor
+            }*/
+            
         }else {
-            self.backColor = meta.bgColor
-        }
+            if self.text == "" {
+                self.backColor = UIColor.clear
+                
+                print("Meta Text is :- \(meta.text)")
+            }else {
+                self.backColor = meta.bgColor
+                //self.bottomMarginPercent = 45
+                self.bottomMarginPercent = bottomMarginPercent + 10
+                print("Meta Text is :- \(meta.text)")
+                
+            }
+        }//*/
         
         setup()
     }
@@ -66,9 +168,11 @@ class ContentText: UITextView, ContentView {
         
         let screenWidht = SCREENSIZE.width - 20
         let width = screenWidht-((self.horizontalMarginPercent/100 * 2) * screenWidht)
+        
         if let font = self.font {
             if let height = self.text?.heightWithConstrainedWidth(width, font: font) {
                 self.height = height
+                print("height of text is: \(height)")
             }
             self.width = width
         }
@@ -85,6 +189,7 @@ class ContentText: UITextView, ContentView {
 }
 
 extension ContentText: UITextViewDelegate {
+    
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         return false
     }

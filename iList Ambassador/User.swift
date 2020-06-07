@@ -187,4 +187,38 @@ class CustomUserDefault: NSObject {
     static func removeLoginData() {
         UserDefaults.standard.removeObject(forKey: "UserData")
     }
+    
+    //set UserName
+    static func saveUserName(name : String) {
+        UserDefaults.standard.set(name, forKey: "UserName")
+        UserDefaults.standard.synchronize()
+    }
+    
+    //get UserName
+    static func getUserName() -> String? {
+        return UserDefaults.standard.object(forKey: "UserName") as? String ?? ""
+    }
+    
+    //Remove UserName
+    static func removeUserName() {
+        UserDefaults.standard.removeObject(forKey: "UserName")
+    }
+    
+    //set Password
+    static func saveUserPassword(password : String) {
+        UserDefaults.standard.set(password, forKey: "UserPassword")
+        UserDefaults.standard.synchronize()
+    }
+    
+    //get Password
+    static func getUserPassword() -> String? {
+        return UserDefaults.standard.object(forKey: "UserPassword") as? String ?? "0"
+    }
+    
+    //Remove Password
+    static func removeUserPassword() {
+        UserDefaults.standard.removeObject(forKey: "UserPassword")
+    }
+    
+    
 }

@@ -190,8 +190,12 @@ extension RewardsSetupViewController {
                 return cell
             case 2:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "LevelCell", for: indexPath) as! LevelCell
-                if let levelStatus = levelBadgeArray?[indexPath.row] {
-                    cell.setImage = levelStatus
+                //Sameer 12/5/2020 crash log
+                //if let levelStatus = levelBadgeArray?[indexPath.row] {
+                //cell.setImage = levelStatus
+                
+                if (levelBadgeArray?[indexPath.row]) != nil {
+                    cell.image.image = #imageLiteral(resourceName: "Polygon") //Sameer 12/5/2020 crash log
                 }
                 return cell
             case 3:
