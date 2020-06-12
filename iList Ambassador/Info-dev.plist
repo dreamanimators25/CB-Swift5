@@ -123,5 +123,7 @@
 			<string>rjKj9Wi9rkjvZCrNYc2VwUTNhBwh2Mxu0S3HFgYgWXYCTOkRjbnNHx1TXucc1mCcy088ZIEWyQKTBE6G2eMEC4QlAtqq0Cfzv5Lt3an6xCCgMCZoB2tw3rMQQgRqjEPY</string>
 		</dict>
 	</dict>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 </dict>
 </plist>

@@ -24,6 +24,7 @@ private let kAPIKeyCreated = "created"
 private let kAPIKeyUpdated = "updated"
 
 //META
+private let kAPIKeyOpacity = "opacity"
 private let kAPIKeyMetaFontWeight = "font_weight"
 //Font Weights
 private let bold = "bold"
@@ -76,6 +77,8 @@ open class RewardPageComponent {
             var BGColor = UIColor.clear
             var BGBoxBool = ""
             var text = ""
+            var opacty : CGFloat = 1.0
+            
             if let metaDataText = meta[kAPIKeyMetaText] as? String {
                 text = metaDataText
             }
@@ -88,6 +91,13 @@ open class RewardPageComponent {
             }
             if let bgboxBool = meta[kAPIKeyMetaBgBoxBool] as? String {
                 BGBoxBool = bgboxBool
+            }
+            if let bgOpact = meta[kAPIKeyOpacity] as? String {
+                //opacty = CGFloat.init(bgOpact)
+                
+                if let n = NumberFormatter().number(from: bgOpact) {
+                    opacty = CGFloat(truncating: n)
+                }
             }
             if let metaDataFontSize = meta[kAPIKeyMetaFontSize] as? String {
                 fontSize = CGFloat(NSString(string: metaDataFontSize).floatValue)
@@ -128,7 +138,7 @@ open class RewardPageComponent {
                     break
                 }
             }
-            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, bgBox: BGBoxBool, text: text, height: height, width: width, textAlignment: textAlignment)
+            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, bgOpacity: opacty, bgBox: BGBoxBool, text: text, height: height, width: width, textAlignment: textAlignment)
         }
         
         if let order = dictionary[kAPIKeyOrder] as? Int {

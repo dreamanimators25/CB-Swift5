@@ -21,6 +21,7 @@ class ContentText: UITextView, ContentView {
     
     var color: UIColor = UIColor.white
     var cent: CGPoint!
+    var alpa : CGFloat!
     
     override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -42,6 +43,10 @@ class ContentText: UITextView, ContentView {
         self.font = meta.font
         self.color = meta.color
         self.textAlignment = meta.textAlignment
+        self.alpa = meta.background_opacity
+        
+        
+        self.backgroundColor = self.backColor.withAlphaComponent(self.alpa) //Sameer 11/6/2020
         
         //print("Meta Text is :- \(meta.text)")
         //print("backGround Box is :- \(meta.background_box)")
@@ -164,8 +169,9 @@ class ContentText: UITextView, ContentView {
         self.dataDetectorTypes = .link
         self.linkTextAttributes = [NSAttributedString.Key.foregroundColor : Color.lightBlueColor()] as [NSAttributedString.Key : Any]
         self.backgroundColor = self.backColor
+        //self.backgroundColor = self.backColor.withAlphaComponent(self.alpa) //Sameer 11/6/2020
         self.layer.cornerRadius = 10.0 // Sameer 24/4/2020
-        
+                
         let screenWidht = SCREENSIZE.width - 20
         let width = screenWidht-((self.horizontalMarginPercent/100 * 2) * screenWidht)
         

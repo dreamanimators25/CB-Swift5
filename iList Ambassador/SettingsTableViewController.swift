@@ -385,6 +385,7 @@ class SettingsTableViewController: UITableViewController, MFMailComposeViewContr
                 CustomUserDefault.removeLoginData()
                 CustomUserDefault.removeUserName()
                 CustomUserDefault.removeUserPassword()
+                CustomUserDefault.removeTokenTime()
                 
                 print(OAuth2Handler.hasAccessToken)
             }

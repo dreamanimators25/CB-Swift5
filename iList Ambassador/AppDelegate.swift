@@ -15,8 +15,8 @@ import Firebase
 import FirebaseMessaging
 import UserNotifications
 
-let newBaseURL = "http://104.42.144.12:5000/api/" //Sameer 23/4/2020
-//let newBaseURL = "http://40.112.131.121:5000/api/"
+//let newBaseURL = "http://104.42.144.12:5000/api/" //Sameer 23/4/2020 Live Url
+let newBaseURL = "http://40.112.131.121:5000/api/" //Test Server Url
 let apdel = UIApplication.shared.delegate
 
 var isComeFromPush = false
@@ -73,21 +73,30 @@ var channelIdPush = 0
                     if userData.id != 0 {
                         
                         OAuth2Handler.sharedInstance.refreshExpiredToken { (bool, acc_token, ref_token) in
-                            OAuth2Handler.sharedInstance.update(accessToken: acc_token ?? "", refreshToken: ref_token ?? "")
-                        }
-                        
-                        UserManager.sharedInstance.storeUserData(userData)
-                        AppDelegate.userId = userData.id
-                        print("User exists, so navigating to application, user id is: \(String(describing: userData.id))")
-                        //self.navigateToApplication()
-                        
-                        //self.updatePushToken()
-                        
-                        DispatchQueue.main.async(execute: {
-                            if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                                appDelegate.navigateToApplication()
+                            
+                            if bool {
+                                OAuth2Handler.sharedInstance.update(accessToken: acc_token ?? "", refreshToken: ref_token ?? "")
+                                
+                                UserManager.sharedInstance.storeUserData(userData)
+                                AppDelegate.userId = userData.id
+                                print("User exists, so navigating to application, user id is: \(String(describing: userData.id))")
+                                
+                                //self.navigateToApplication()
+                                //self.updatePushToken()
+                                
+                                DispatchQueue.main.async(execute: {
+                                    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+                                        appDelegate.navigateToApplication()
+                                    }
+                                })
+                                
+                            }else {
+                                print("User id is 0, so going to login method")
+                                OAuth2Handler.sharedInstance.clearAccessToken()
+                                self.navigateToLogin()
                             }
-                        })
+                            
+                        }
                         
                     }else {
                         print("User id is 0, so going to login method")
@@ -95,6 +104,7 @@ var channelIdPush = 0
                         self.navigateToLogin()
                     }
                 }else {
+                    
                     print("User id is 0, so going to login method")
                     OAuth2Handler.sharedInstance.clearAccessToken()
                     self.navigateToLogin()
@@ -213,6 +223,10 @@ var channelIdPush = 0
         }
         
         return true
+    }
+    
+    func refreshToken() {
+        
     }
 
     

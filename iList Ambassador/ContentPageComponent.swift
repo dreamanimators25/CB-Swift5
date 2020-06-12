@@ -35,6 +35,8 @@ private let kAPIKeyMetaFontSize = "font_size"
 private let kAPIKeyMetaColor = "color"
 private let kAPIKeyMetaBgColor = "box_color"
 
+
+private let kAPIKeyOpacity = "opacity"
 private let kAPIKeyMetaBgBoxBool = "background_box"
 private let kAPIKeyMetaText = "text"
 private let kAPIKeyMetaHeight = "height"
@@ -112,6 +114,7 @@ open class ContentPageComponent {
             var BGColor = UIColor.clear
             var BGBoxBool = ""
             var text = ""
+            var opacty : CGFloat = 1.0
             if let metaDataText = meta[kAPIKeyMetaText] as? String {
                 text = metaDataText
             }
@@ -122,6 +125,15 @@ open class ContentPageComponent {
             if let metaBgColor = meta[kAPIKeyMetaBgColor] as? String {
                 BGColor = UIColor(hexString: metaBgColor) 
             }
+            
+            if let bgOpact = meta[kAPIKeyOpacity] as? String {
+                //opacty = CGFloat.init(bgOpact)
+                
+                if let n = NumberFormatter().number(from: bgOpact) {
+                    opacty = CGFloat(truncating: n)
+                }
+            }
+            
             if let bgboxBool = meta[kAPIKeyMetaBgBoxBool] as? String {
                 BGBoxBool = bgboxBool
             }
@@ -165,7 +177,7 @@ open class ContentPageComponent {
                     break
                 }
             }
-            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, bgBox: BGBoxBool, text: text, height: height, width: width, textAlignment: textAlignment)
+            self.meta = Meta(font: font, size: fontSize, color: color,bgColor: BGColor, bgOpacity: opacty, bgBox: BGBoxBool, text: text, height: height, width: width, textAlignment: textAlignment)
         }
         
         if let order = dictionary[kAPIKeyOrder] as? Int {
@@ -232,8 +244,9 @@ struct Meta {
     var width: CGFloat
     var textAlignment: NSTextAlignment
     var background_box : String
+    var background_opacity : CGFloat
 
-    init(font: UIFont, size: CGFloat, color: UIColor, bgColor: UIColor, bgBox: String, text: String, height: CGFloat,width: CGFloat, textAlignment: NSTextAlignment) {
+    init(font: UIFont, size: CGFloat, color: UIColor, bgColor: UIColor, bgOpacity: CGFloat , bgBox: String, text: String, height: CGFloat,width: CGFloat, textAlignment: NSTextAlignment) {
         self.font = font
         self.size = size
         self.color = color
@@ -244,6 +257,7 @@ struct Meta {
         self.width = width
         self.textAlignment = textAlignment
         self.background_box = bgBox
+        self.background_opacity = bgOpacity
     }
 }
 

@@ -25,6 +25,8 @@ open class ContentPage {
     var components: [ContentPageComponent]
     //var backgrounds: [Backgrounds]?
     
+    var consumeActionComponent: ConsumeActionComponents?
+    
     var frameUrl : String?  //Sameer 25/4/2020
     
     var order: Int = 0
@@ -68,6 +70,11 @@ open class ContentPage {
         }
         if let consume = dictionary["consume_action"] as? Int {
             self.consumeAction = consume
+        }
+        
+        //Sameer 11/6/2020
+        if let consumeActComp = dictionary["consume_action_component"] as? [String:Any] {
+            self.consumeActionComponent = ConsumeActionComponents.init(dictionary: consumeActComp)
         }
         
         if self.consumeAction == 9 {

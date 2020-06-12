@@ -102,7 +102,7 @@ open class UserManager: BaseManager {
         let router = UserRouter(endpoint: .loginUser(username: username, password: password))
         print("THIS SHOULD NOT HAPPEN")
         
-        performRequest(withRouter: router, { [weak self] (response: DataResponse<Any>) in
+        performRequest1(withRouter: router, { [weak self] (response: DataResponse<Any>) in
             switch response.result {
             case .success(let dict):
                 print("dict = \(dict)")
@@ -116,10 +116,19 @@ open class UserManager: BaseManager {
                 
                 if let dict = dict as? [String:Any],
                     let refreshToken = dict["refresh_token"] as? String,
-                    let accessToken = dict["access_token"] as? String {
+                    let accessToken = dict["access_token"] as? String,
+                    let expireTime = dict["expires_in"] as? Double {
                 
                     OAuth2Handler.sharedInstance.update(accessToken: accessToken, refreshToken: refreshToken)
                     print("Access and refresh token have been updated")
+                    
+                    
+                    let time = Date().timeIntervalSince1970
+                    let expTime = time + expireTime
+                    print(expTime,time)
+                    
+                    CustomUserDefault.saveTokenTime(data: expTime)
+                    
                 }
                 
                 UserManager.sharedInstance.getCurrentUser { (user, error) in
@@ -391,7 +400,7 @@ open class UserManager: BaseManager {
         print("GETCURRENTUSER")
         let router = UserRouter(endpoint: .getCurrentUser)
         
-        performRequest(withRouter: router, { (response: DataResponse<Any>) in
+        performRequest1(withRouter: router, { (response: DataResponse<Any>) in
             switch response.result {
             case .success(let dict):
                 let userDict = dict as! [String:Any]

@@ -188,6 +188,21 @@ class CustomUserDefault: NSObject {
         UserDefaults.standard.removeObject(forKey: "UserData")
     }
     
+    //set Token Time
+    static func saveTokenTime(data : Double?) {
+        UserDefaults.standard.set(data, forKey: "TokenTime")
+    }
+    
+    //get Token Time
+    static  func getTokenTime()-> Double? {
+        return UserDefaults.standard.object(forKey: "TokenTime") as? Double ?? 0.0
+    }
+    
+    //Remove Toke Time
+    static func removeTokenTime() {
+        UserDefaults.standard.removeObject(forKey: "TokenTime")
+    }
+    
     //set UserName
     static func saveUserName(name : String) {
         UserDefaults.standard.set(name, forKey: "UserName")
