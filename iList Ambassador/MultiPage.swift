@@ -6,6 +6,12 @@
 //  Copyright © 2016 iList AB. All rights reserved.
 //
 
+public enum txtAlignment: Int {
+    case center = 0
+    case left = 1
+    case right = 2
+}
+
 protocol MultiPageDelegate {
     func currentSubPage(_ page: Int)
     func currentPage(_ page: Int)
@@ -733,60 +739,7 @@ extension MultiPage: UICollectionViewDataSource {
             print("connect = \(idin)")
             print("connect1 = \(action)")
             
-            //Sameer 11/6/2020
-            let consumeActionComp = content?.pages[page].consumeActionComponent
-            if let col = consumeActionComp?.color {
-                
-                //"color" : "#000000",
-                //"rounded_box" : "true",
-                //"background_box" : "true",
-                //"text_align" : "center",
-                //"text" : "lhjklhjkl",
-                //"opacity" : "100",
-                //"font_size" : "30",
-                //"box_color" : "#ffffff"
-                
-                self.goThereBtn.titleLabel?.textColor = UIColor.init(hexString: col)
-            }
-            
-            if let rounBox = consumeActionComp?.roundedBox {
-                if rounBox == "true" {
-                    //self.goThereBtn.layer.cornerRadius =
-                }
-            }
-            
-            if let backBox = consumeActionComp?.backGroundBox {
-                if backBox == "true" {
-                    
-                }
-            }
-            
-            if let txtAlgn = consumeActionComp?.textAlign {
-                //self.goThereBtn.titleLabel?.textAlignment = NSTextAlignment.init()
-            }
-            
-            if let txt = consumeActionComp?.text {
-                self.goThereBtn.titleLabel?.text = txt
-            }
-            
-            if let txtAlgn = consumeActionComp?.textAlign {
-                //self.goThereBtn.titleLabel?.textAlignment = NSTextAlignment.init()
-            }
-            
-            if let opact = consumeActionComp?.opacity {
-                //let op = CGFloat(opact)
-                //self.goThereBtn.backgroundColor = self.goThereBtn.backgroundColor?.withAlphaComponent(op)
-            }
-            
-            if let fntSize = consumeActionComp?.fontSize {
-                //self.goThereBtn.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(fntSize))
-            }
-            
-            if let bxCol = consumeActionComp?.boxColor {
-                self.goThereBtn.backgroundColor = UIColor.init(hexString: bxCol)
-            }
-            
-            
+                        
             if action == 10 {
                 let strArray = idin.components(separatedBy: ",") //s
                 for (index,item) in strArray.enumerated() {
@@ -963,6 +916,78 @@ extension MultiPage: UICollectionViewDataSource {
                 self.linkView.isHidden = true
                 self.goThereBtn.isHidden = true
             }
+            
+        }
+        
+        //Sameer 11/6/2020
+        if let consumeActionComp = content?.pages[page].consumeActionComponent {
+            if let col = consumeActionComp.color {
+                
+                OperationQueue.main.addOperation {
+                    //self.goThereBtn.titleLabel?.textColor = UIColor.init(hexString: col)
+                    self.goThereBtn.setTitleColor(UIColor.init(hexString: col), for: .normal)
+                }
+            }
+            
+            if let rounBox = consumeActionComp.roundedBox {
+                if rounBox == "true" {
+                    OperationQueue.main.addOperation {
+                        self.goThereBtn.layer.cornerRadius = 10.0
+                    }
+                }
+            }
+            
+            if let backBox = consumeActionComp.backGroundBox {
+                if backBox == "true" {
+                    OperationQueue.main.addOperation {
+                        
+                    }
+                }else {
+                    OperationQueue.main.addOperation {
+                        self.goThereBtn.backgroundColor = UIColor.clear
+                    }
+                }
+            }
+            
+            //if let txtAlgn = consumeActionComp?.textAlign {
+            OperationQueue.main.addOperation {
+                //self.goThereBtn.contentHorizontalAlignment = UIControl.ContentVerticalAlignment.init(rawValue: txtAlignment.center.rawValue)
+            }
+            //}
+            
+            if let txt = consumeActionComp.text {
+                OperationQueue.main.addOperation {
+                    //self.goThereBtn.titleLabel?.text = txt
+                    self.goThereBtn.setTitle(txt, for: .normal)
+                }
+            }
+            
+            if let bxCol = consumeActionComp.boxColor {
+                OperationQueue.main.addOperation {
+                    self.goThereBtn.backgroundColor = UIColor.init(hexString: bxCol)
+                }
+            }
+            
+            if let opact = consumeActionComp.opacity {
+                OperationQueue.main.addOperation {
+                    if let n = NumberFormatter().number(from: opact) {
+                        let opacty = CGFloat(truncating: n)
+                        //self.goThereBtn.backgroundColor?.withAlphaComponent(opacty)
+                        
+                        self.goThereBtn.backgroundColor = self.goThereBtn.backgroundColor?.withAlphaComponent(opacty)
+                    }
+                }
+            }
+            
+            if let fntSize = consumeActionComp.fontSize {
+                OperationQueue.main.addOperation {
+                    if let n = NumberFormatter().number(from: fntSize) {
+                        let f = CGFloat(truncating: n)
+                        self.goThereBtn.titleLabel?.font = UIFont.systemFont(ofSize: f)
+                    }
+                }
+            }
+            
             
         }
     

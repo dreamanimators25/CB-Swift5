@@ -44,9 +44,9 @@ class ContentText: UITextView, ContentView {
         self.color = meta.color
         self.textAlignment = meta.textAlignment
         self.alpa = meta.background_opacity
+                
         
-        
-        self.backgroundColor = self.backColor.withAlphaComponent(self.alpa) //Sameer 11/6/2020
+        //self.goThereBtn.backgroundColor = self.goThereBtn.backgroundColor?.withAlphaComponent(opacty)
         
         //print("Meta Text is :- \(meta.text)")
         //print("backGround Box is :- \(meta.background_box)")
@@ -89,6 +89,7 @@ class ContentText: UITextView, ContentView {
                     print("Meta Text is :- \(meta.text)")
                     
                     self.backColor = meta.bgColor
+                    
                 }
                 
             }else {
@@ -126,6 +127,7 @@ class ContentText: UITextView, ContentView {
                     print("Meta Text is :- \(meta.text)")
                     //self.bottomMarginPercent = bottomMarginPercent + 20
                     self.backColor = meta.bgColor
+                                        
                 }
             }
             
@@ -144,9 +146,11 @@ class ContentText: UITextView, ContentView {
             if self.text == "" {
                 self.backColor = UIColor.clear
                 
+                
                 print("Meta Text is :- \(meta.text)")
             }else {
                 self.backColor = meta.bgColor
+                
                 //self.bottomMarginPercent = 45
                 self.bottomMarginPercent = bottomMarginPercent + 10
                 print("Meta Text is :- \(meta.text)")
@@ -155,6 +159,7 @@ class ContentText: UITextView, ContentView {
         }//*/
         
         setup()
+                        
     }
 
     fileprivate func setup() {
@@ -169,7 +174,11 @@ class ContentText: UITextView, ContentView {
         self.dataDetectorTypes = .link
         self.linkTextAttributes = [NSAttributedString.Key.foregroundColor : Color.lightBlueColor()] as [NSAttributedString.Key : Any]
         self.backgroundColor = self.backColor
-        //self.backgroundColor = self.backColor.withAlphaComponent(self.alpa) //Sameer 11/6/2020
+        
+        if self.alpa != nil && self.alpa != 0.0 {
+            self.backgroundColor = self.backColor.withAlphaComponent(self.alpa)
+        }
+
         self.layer.cornerRadius = 10.0 // Sameer 24/4/2020
                 
         let screenWidht = SCREENSIZE.width - 20

@@ -110,11 +110,11 @@ open class ContentPageComponent {
 
         if let meta = dictionary[kAPIKeyMeta] as? [String:Any] {
             
-            var color = UIColor.black
+            var color = UIColor.clear
             var BGColor = UIColor.clear
             var BGBoxBool = ""
             var text = ""
-            var opacty : CGFloat = 1.0
+            var opacty : CGFloat = 0.0
             if let metaDataText = meta[kAPIKeyMetaText] as? String {
                 text = metaDataText
             }
