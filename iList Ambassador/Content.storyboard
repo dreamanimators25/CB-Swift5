@@ -241,7 +241,7 @@
                                             <constraint firstAttribute="bottom" secondItem="tbs-B9-uIe" secondAttribute="bottom" constant="14" id="Lnd-s8-EXd"/>
                                             <constraint firstItem="XWF-v9-TzI" firstAttribute="leading" secondItem="Qqh-sa-A18" secondAttribute="leadingMargin" constant="16" id="SMb-ho-yuu"/>
                                             <constraint firstAttribute="bottom" secondItem="cKW-Cw-4Oz" secondAttribute="bottom" constant="14" id="Vh8-L3-BAb"/>
-                                            <constraint firstItem="y6W-tw-LzP" firstAttribute="centerY" secondItem="Qqh-sa-A18" secondAttribute="centerY" id="Ze4-jg-rlk"/>
+                                            <constraint firstItem="y6W-tw-LzP" firstAttribute="top" secondItem="Qqh-sa-A18" secondAttribute="top" id="Ze4-jg-rlk"/>
                                             <constraint firstItem="O79-hy-JCl" firstAttribute="leading" secondItem="Zfj-CJ-EOB" secondAttribute="trailing" constant="-236" id="jDz-ma-lmB"/>
                                             <constraint firstItem="y6W-tw-LzP" firstAttribute="width" secondItem="Qqh-sa-A18" secondAttribute="width" id="jue-FN-Zna"/>
                                             <constraint firstItem="cKW-Cw-4Oz" firstAttribute="leading" secondItem="Qqh-sa-A18" secondAttribute="leadingMargin" constant="5" id="oTL-FI-Hj8"/>
@@ -324,7 +324,7 @@
                                         </view>
                                         <constraints>
                                             <constraint firstItem="149-xJ-91T" firstAttribute="leading" secondItem="Sst-Iw-ftK" secondAttribute="leading" constant="60" id="0cl-bY-Hnz"/>
-                                            <constraint firstItem="Htp-Wo-dqF" firstAttribute="centerY" secondItem="Sst-Iw-ftK" secondAttribute="centerY" id="9tv-A5-qoE"/>
+                                            <constraint firstItem="Htp-Wo-dqF" firstAttribute="top" secondItem="Sst-Iw-ftK" secondAttribute="top" id="9tv-A5-qoE"/>
                                             <constraint firstItem="Ip1-z6-xR8" firstAttribute="leading" secondItem="149-xJ-91T" secondAttribute="trailing" constant="4" id="E8t-1O-nNU"/>
                                             <constraint firstItem="Htp-Wo-dqF" firstAttribute="width" secondItem="Sst-Iw-ftK" secondAttribute="width" id="OBV-QN-Mfx"/>
                                             <constraint firstItem="149-xJ-91T" firstAttribute="top" secondItem="Sst-Iw-ftK" secondAttribute="top" constant="15" id="PBz-BJ-QAi"/>

@@ -491,6 +491,8 @@ extension SinglePage {
                 vertMargin = component.marginEdgePercentage*10
             }
             
+            /*
+            
             let bottom = (screenHeight - component.height) * (component.bottomMarginPercent/100)
             
             height += bottom + component.height
@@ -500,11 +502,33 @@ extension SinglePage {
                 veritcalVisualString += "-"
             }
             veritcalVisualString += "[\(viewString)]-\(metricsName)"
+             */
+            
+            var bottom: CGFloat = 0.0
+            
+            if i != 0 {
+                veritcalVisualString += "-"
+                bottom = (screenHeight - component.height - height) * (vertMargin/100)
+            } else {
+                bottom = 100 - vertMargin
+            }
+            
+            height += bottom + component.height
+            verticalMetrics[metricsName] = bottom
+            
+            var lastElement = componentViews.count;
+            lastElement -= 1;
+            
+            if i != lastElement {
+                veritcalVisualString += "[\(viewString)]-\(metricsName)"
+            } else {
+                veritcalVisualString += "[\(viewString)]"
+            }
         }
         
         if componentViews.count > 0 {
-            veritcalVisualString += "-|"
-            let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: veritcalVisualString, options: [], metrics: verticalMetrics, views: views)
+            //veritcalVisualString += "-|"
+            let verticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: veritcalVisualString, options: .alignAllLeading, metrics: verticalMetrics, views: views)
             componentConstraints += verticalConstraints
             pageView.addConstraints(componentConstraints)
         }
