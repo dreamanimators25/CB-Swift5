@@ -332,9 +332,10 @@ class ContentSetupViewController: UIViewController {
         
         self.brandButton.isHidden = true
         
-        loadStatistics = {
-            self.endStats()
-        }
+        //Sameer 15/6/2020
+//        loadStatistics = {
+//            self.endStats()
+//        }
         
         self.makeBarButton()
         NotificationCenter.default.post(name: Notification.Name.init("showMenu"), object: nil, userInfo: ["data" : true])
@@ -457,7 +458,7 @@ class ContentSetupViewController: UIViewController {
             }
         }
 //        NotificationCenter.default.removeObserver(NSNotification.Name.UIApplicationDidEnterBackground)
-        //endStats() //Sameer 29/4/2020
+        endStats() //Sameer 29/4/2020
         dismiss(animated: true, completion: nil)
         navigationController?.popToRootViewController(animated: true)
     }
@@ -539,7 +540,8 @@ class ContentSetupViewController: UIViewController {
                 DispatchQueue.main.async(execute: {
                     guard let view = self.contentCollectionView else { return }
                     
-                    self.setupStatistics(contents)
+                    //self.setupStatistics(contents) //Sameer 16/6/2020
+                    self.setupStatistics(self.contents ?? [])
                     self.handleContentButtons()
                     self.contentCollectionView.reloadData()
                     

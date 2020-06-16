@@ -12,6 +12,7 @@ class AmbassadorStatistic {
 
     let ambassadorId: Int
     var content: [ContentStatistic]
+    //var content = [ContentStatistic]()
         
     class ContentStatistic {
         let contentId: Int
@@ -81,10 +82,30 @@ class AmbassadorStatistic {
         for cont in content {
             var pages = [[String:Any]]()
             for page in cont.pages {
+                pages.append(["page_id":page.pageId as AnyObject, "duration" : page.durationPage as AnyObject, "clicks" : page.clicks as AnyObject, "play_duration" : page.durationPage as AnyObject])
+            }
+            contDict.append(["content_id" : cont.contentId as AnyObject, "page_stats" : pages as AnyObject])
+        }
+        
+        //var returnDict = [String : AnyObject]()
+        //returnDict["contents_visited"] = contDict as AnyObject
+        //return returnDict
+        return contDict
+    }
+    
+    /*
+     {"contents_visited":[{"content_id":2007,"page_stats":[{"page_id":4001,"duration":7,"clicks":0,"play_duration":0},{"page_id":3998,"duration":1,"clicks":0,"play_duration":0},{"page_id":3930,"duration":3,"clicks":0,"play_duration":0},{"page_id":3933,"duration":1,"clicks":0,"play_duration":0},{"page_id":3932,"duration":2,"clicks":0,"play_duration":0},{"page_id":3995,"duration":1,"clicks":0,"play_duration":0},{"page_id":3999,"duration":2,"clicks":0,"play_duration":0},{"page_id":4000,"duration":1,"clicks":0,"play_duration":0}]}]}
+     
+     
+    func toDict() -> [[String: AnyObject]] {
+        var contDict = [[String: AnyObject]]()
+        for cont in content {
+            var pages = [[String:Any]]()
+            for page in cont.pages {
                 pages.append(["page_id":page.pageId as AnyObject, "duration" : page.durationPage as AnyObject, "clicks" : page.clicks as AnyObject])
             }
             contDict.append(["content_id" : cont.contentId as AnyObject, "page_stats" : pages as AnyObject])
         }
         return contDict
-    }
+    }*/
 }

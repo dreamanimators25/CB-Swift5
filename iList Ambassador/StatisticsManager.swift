@@ -19,7 +19,8 @@ class StatisticsManager: BaseManager {
     }
     
     func sendAmbassadorStatistics(_ stats: AmbassadorStatistic, completion: @escaping SuccessResponseBlock) {
-        let router = StatisticsRouter(endpoint: .sendAmbassadorStatistic(id: stats.getId(), stats: stats.toDict()))
+        let router = StatisticsRouter(endpoint: .sendAmbassadorStatistic(id: stats.getId(), stats: stats.toDict())) //Sameer 15/6/2020
+        //let router = StatisticsRouter(endpoint: .sendAmbassadorStatistic(id: stats.getId(), stats: [stats.toDict()]))
         performRequest(withRouter: router, { (response: DataResponse<Any>) in
             switch response.result {
             case .success(_):

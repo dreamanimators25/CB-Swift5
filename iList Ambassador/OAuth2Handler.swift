@@ -168,7 +168,15 @@ class OAuth2Handler: RequestAdapter, RequestRetrier {
             .responseJSON { [weak self] response in
                 guard let strongSelf = self else { return }
                 
-                if let json = response.result.value as? [String: Any], let accessToken = json["access_token"] as? String, let refreshToken = json["refresh_token"] as? String {
+                if let json = response.result.value as? [String: Any], let accessToken = json["access_token"] as? String, let refreshToken = json["refresh_token"] as? String,let expireTime = json["expires_in"] as? Double {
+                    
+                    //Sameer 16/6/2020
+                    let time = Date().timeIntervalSince1970
+                    let expTime = time + expireTime
+                    print(expTime,time)
+                    
+                    CustomUserDefault.saveTokenTime(data: expTime)
+                    
                     completion(true, accessToken, refreshToken)
                 } else {
                     completion(false, nil, nil)
